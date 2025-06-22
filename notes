@@ -1,0 +1,11 @@
+plants required:
+    sunflower
+    peashooter
+    cherrybomb
+zombie required:
+    zombie
+    flagzombie
+    conheadzombie
+
+- zombie health 10
+- 3 min game(180 seconds)
