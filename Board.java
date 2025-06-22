@@ -3,26 +3,45 @@ public class Board {
     private Plant[] plants;
     private Zombie[] zombies;
     private Tile[][] board;
+    private GameTimer gameTimer;
 
-    public Board(){
+    public Board() {
         board = new Tile[5][9];
-
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j < 9; j++){
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 9; j++) {
                 board[i][j] = new Tile();
             }
         }
+
+        gameTimer = new GameTimer(this);
+        gameTimer.start(); 
+                
     }
 
-    public void display(){
-        
+    public void display() {
+    for (int i = 0; i < 5; i++) {
+        System.out.println("---------------------------------------------");
+        for (int j = 0; j < 9; j++) {
+            if (j == 0) System.out.print("| "); // start of row
+            System.out.print((board[i][j].isOccupied() ? "1" : "0") + " | ");
+        }
+        System.out.println();
     }
+    System.out.println("---------------------------------------------");
+}
 
     public void placePlant(int row, int col, Plant plant){
         if(!board[row][col].isOccupied()){
             board[row][col].setPlant(plant);
         }
-        System.out.println("placed");
+        System.out.println("Placed plant at (" + row + ", " + col + ")");
+    }
+
+    public void placeZombie(int row, int col, Zombie zombie){
+        if(!board[row][col].isOccupied()){
+            board[row][col].setZombie(zombie);
+        }
+        System.out.println("Zombie is at (" + row + ", " + col + ")");
     }
 
 }
