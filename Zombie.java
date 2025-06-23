@@ -2,8 +2,17 @@ public class Zombie {
 
     private int speed;
     private int damage;
-    private int health;
+    private int health = 3;
     private static int zombieCount = 0;
+
+
+    public void takeDamage(int amount){
+        health -= amount;
+    }
+
+    public boolean isDead(){
+        return health <= 0;
+    }
 
     public int getDamage() {
         return damage;

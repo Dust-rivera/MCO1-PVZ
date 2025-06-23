@@ -4,6 +4,7 @@ public class Driver {
 
     private static boolean running = true;
     private static int timer = 180;
+    private static int tickTimer = 0;
     public static void main(String[] args){
 
         User user = new User();
@@ -12,18 +13,24 @@ public class Driver {
 
         Thread gameLoop = new Thread(() -> {
             while (running) {
-                //board.update(); // game logic: move zombies, shoot, etc.
-                System.out.println("Timer: " + timer-- + " seconds");
+                board.update(); // game logic: move zombies, shoot, etc.
+                System.out.println("Timer: " + timer + " seconds");
                 board.display(); // print current board
+                System.out.println("Sun dropped: " + board.getSunCount());
                 System.out.println("Sun Points: " + user.getSunCount());
                 System.out.print("Enter comamnd: ");
+                tickTimer++;
                 try {
-                    Thread.sleep(1000); // 1-second tick
+                    Thread.sleep(250); // 1-second tick
                 } catch (InterruptedException e) {
                     break;
                 }
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
+
+                if(tickTimer % 4 == 0){
+                    timer--;
+                }
 
                 if(timer == 0)
                     running = false;
@@ -38,9 +45,35 @@ public class Driver {
 
                 if(input.equalsIgnoreCase("exit")){
                     running = false;
-                }else if(input.startsWith("plant")){
+                }else if(input.startsWith("sunflower")){
                     String[] coordinate = input.split(" ");
-                    board.placePlant(0, 0, new Sunflower());
+                    int row = Integer.parseInt(coordinate[1]);
+                    int col = Integer.parseInt(coordinate[2]);
+                    if(user.getSunCount() >= 50 && Plant.sunflowerCD == 0){
+                        Plant.sunflowerCD = Plant.SUNFLOWER_CD;
+                        board.placePlant(row, col, new Sunflower(row, col));
+                        user.buyPlant(50);
+                    }else if(user.getSunCount() >= 50 && Plant.sunflowerCD != 0){
+                        System.out.println("Sunflower on cooldown!");
+                    }else{
+                        System.out.println("Not enough sun!");
+                    }
+                    coordinate = null;
+                }else if(input.startsWith("peashooter")){
+                    String[] coordinate = input.split(" ");
+                    int row = Integer.parseInt(coordinate[1]);
+                    int col = Integer.parseInt(coordinate[2]);
+                    if(user.getSunCount() >= 100 && Plant.peashooterCD == 0){
+                        Plant.peashooterCD = Plant.PEASHOOTER_CD;
+                        board.placePlant(row, col, new Peashooter(row, col));
+                        user.buyPlant(100);
+                    }else if(user.getSunCount() >= 100 && Plant.peashooterCD != 0){
+                        System.out.println("Peashooter on cooldown!");
+                    }else{
+                        System.out.println("Not enough sun!");
+                    }
+                }else if(input.equalsIgnoreCase("collect")){
+                    user.collectSun(board.getSunCount(), board);
                 }
 
             }
@@ -49,6 +82,10 @@ public class Driver {
 
         gameLoop.start();
         inputLoop.start();
+        board.placeZombie(0, 8, new Zombie());
+        if(timer == 0){
+            running = false;
+        }
 
 
 

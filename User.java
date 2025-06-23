@@ -6,14 +6,20 @@ public class User {
         sunCount = 50;
     }
 
-    public void collectSun(int amount){
-        sunCount += amount;
+    public void buyPlant(int amount){
+        sunCount -= amount;
+    }
+
+    public void collectSun(int amount, Board board){
+        board.setSun();
+        sunCount += (amount * 25);
+
     }
 
     public int getSunCount() {
         return sunCount;
     }
 
-    
+
     
 }
