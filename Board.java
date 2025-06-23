@@ -13,8 +13,8 @@ public class Board {
             }
         }
 
-        gameTimer = new GameTimer(this);
-        gameTimer.start(); 
+        //gameTimer = new GameTimer(this);
+        //gameTimer.start(); 
                 
     }
 
@@ -28,7 +28,7 @@ public class Board {
         System.out.println();
     }
     System.out.println("---------------------------------------------");
-}
+    }
 
     public void placePlant(int row, int col, Plant plant){
         if(!board[row][col].isOccupied()){

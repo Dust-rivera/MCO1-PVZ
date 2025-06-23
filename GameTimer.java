@@ -25,6 +25,7 @@ public class GameTimer {
                 }
 
                 System.out.println("Time left: " + count + " seconds");
+                
                 board.display(); 
                 count--;
             }
