@@ -3,9 +3,14 @@ public class Board {
     private Plant[] plants;
     private Zombie[] zombies;
     private Tile[][] board;
-    private GameTimer gameTimer;
+    private int tickCount = 0;
+    private int sunCount = 0;
+    private User player;
 
-    public Board() {
+    public Board(User player) {
+
+        this.player = player;
+
         board = new Tile[5][9];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 9; j++) {
@@ -16,6 +21,21 @@ public class Board {
         //gameTimer = new GameTimer(this);
         //gameTimer.start(); 
                 
+    }
+
+    public void generateSun(){
+        
+    }
+
+    
+
+    public void update(){
+        tickCount++;
+        
+        if(tickCount % 3 == 0){
+            generateSun();
+        }
+
     }
 
     public void display() {

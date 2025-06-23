@@ -3,18 +3,19 @@ import java.util.Scanner;
 public class Driver {
 
     private static boolean running = true;
-    private static String lastInput = ""; 
+    private static int timer = 180;
     public static void main(String[] args){
 
-
-        Board board = new Board();
-
-        Sunflower sunflower = new Sunflower();
+        User user = new User();
+        Board board = new Board(user);
+        //Sunflower sunflower = new Sunflower();
 
         Thread gameLoop = new Thread(() -> {
             while (running) {
                 //board.update(); // game logic: move zombies, shoot, etc.
+                System.out.println("Timer: " + timer-- + " seconds");
                 board.display(); // print current board
+                System.out.println("Sun Points: " + user.getSunCount());
                 System.out.print("Enter comamnd: ");
                 try {
                     Thread.sleep(1000); // 1-second tick
@@ -23,6 +24,9 @@ public class Driver {
                 }
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
+
+                if(timer == 0)
+                    running = false;
             }
         });
 
@@ -34,15 +38,19 @@ public class Driver {
 
                 if(input.equalsIgnoreCase("exit")){
                     running = false;
-                }else if(input.equalsIgnoreCase("plant")){
-                    board.placePlant(1, 1, sunflower);
+                }else if(input.startsWith("plant")){
+                    String[] coordinate = input.split(" ");
+                    board.placePlant(0, 0, new Sunflower());
                 }
 
             }
+            scanner.close();
         });
 
         gameLoop.start();
         inputLoop.start();
+
+
 
 
 
