@@ -63,8 +63,9 @@ public class Driver {
 
 
 
-
-
+//CherryBomb cherryBomb = new CherryBomb();
+    //board.placePlant(2, 2, cherryBomb);
+    
         // board.placePlant(1, 1, sunflower);
 
         // System.out.println(board);
