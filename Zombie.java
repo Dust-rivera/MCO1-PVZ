@@ -5,6 +5,15 @@ public class Zombie {
     private int health;
     private static int zombieCount = 0;
 
+
+    public void takeDamage(int amount){
+        health -= amount;
+    }
+
+    public boolean isDead(){
+        return health <= 0;
+    }
+
     public int getDamage() {
         return damage;
     }

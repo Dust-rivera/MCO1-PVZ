@@ -3,6 +3,7 @@ public class Board {
     private Plant[] plants;
     private Zombie[] zombies;
     private Tile[][] board;
+    private int plantCount = 0;
     private int tickCount = 0;
     private int sunCount = 0;
     private User player;
@@ -23,17 +24,39 @@ public class Board {
                 
     }
 
-    public void generateSun(){
-        
+    public void setSun(){
+        sunCount = 0;
     }
 
-    
+    public int getSunCount() {
+        return sunCount;
+    }
+
+    public int getRows(){
+        return 5;
+    }
+
+    public int getCol(){
+        return 9;
+    }
+
+    public void generateSun(){
+        sunCount++;
+    }
 
     public void update(){
         tickCount++;
         
         if(tickCount % 3 == 0){
             generateSun();
+            for (int r = 0; r < board.length; r++) {
+                for (int c = 0; c < board[0].length; c++) {
+                    Plant plant = board[r][c].getPlant();
+                    if (plant != null) {
+                        plant.update(this);
+                    }
+                }
+            }
         }
 
     }
@@ -51,6 +74,7 @@ public class Board {
     }
 
     public void placePlant(int row, int col, Plant plant){
+        //plants[plantCount] = plant;
         if(!board[row][col].isOccupied()){
             board[row][col].setPlant(plant);
         }

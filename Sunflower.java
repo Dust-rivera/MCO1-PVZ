@@ -1,17 +1,23 @@
 public class Sunflower extends Plant{
 
-    private int tick; 
+    private final int baseTick = 3;
+    private  int tick = 0;
 
     public Sunflower(){
         super(4, 10, 15);
     }
 
-    public void drop(){
-
+    @Override
+    public void update(Board board){
+        tick++;
+        if(tick == baseTick){
+            board.generateSun();
+            tick = 0;
+        }
     }
 
-    public int getTick() {
-        return tick;
+    public void generateSun(Board board){
+        board.generateSun();
     }
 
 }

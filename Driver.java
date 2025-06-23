@@ -12,9 +12,10 @@ public class Driver {
 
         Thread gameLoop = new Thread(() -> {
             while (running) {
-                //board.update(); // game logic: move zombies, shoot, etc.
+                board.update(); // game logic: move zombies, shoot, etc.
                 System.out.println("Timer: " + timer-- + " seconds");
                 board.display(); // print current board
+                System.out.println("Sun dropped: " + board.getSunCount());
                 System.out.println("Sun Points: " + user.getSunCount());
                 System.out.print("Enter comamnd: ");
                 try {
@@ -38,9 +39,19 @@ public class Driver {
 
                 if(input.equalsIgnoreCase("exit")){
                     running = false;
-                }else if(input.startsWith("plant")){
+                }else if(input.startsWith("sunflower")){
                     String[] coordinate = input.split(" ");
-                    board.placePlant(0, 0, new Sunflower());
+                    int row = Integer.parseInt(coordinate[1]);
+                    int col = Integer.parseInt(coordinate[2]);
+                    if(user.getSunCount() >= 25){
+                        board.placePlant(row, col, new Sunflower());
+                        user.buyPlant(25);
+                    }else{
+                        System.out.println("Not enough sun!");
+                    }
+                    coordinate = null;
+                }else if(input.equalsIgnoreCase("collect")){
+                    user.collectSun(board.getSunCount(), board);
                 }
 
             }

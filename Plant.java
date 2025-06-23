@@ -12,7 +12,7 @@ public class Plant {
         this.dirDamage = dirDamage;
     }
 
-    public void place(){
+    public void update(Board board){
         
     }
 
