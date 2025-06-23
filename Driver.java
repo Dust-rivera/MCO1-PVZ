@@ -49,9 +49,12 @@ public class Driver {
                     String[] coordinate = input.split(" ");
                     int row = Integer.parseInt(coordinate[1]);
                     int col = Integer.parseInt(coordinate[2]);
-                    if(user.getSunCount() >= 50){
+                    if(user.getSunCount() >= 50 && Plant.sunflowerCD == 0){
+                        Plant.sunflowerCD = Plant.SUNFLOWER_CD;
                         board.placePlant(row, col, new Sunflower(row, col));
-                        user.buyPlant(25);
+                        user.buyPlant(50);
+                    }else if(user.getSunCount() >= 50 && Plant.sunflowerCD != 0){
+                        System.out.println("Sunflower on cooldown!");
                     }else{
                         System.out.println("Not enough sun!");
                     }
@@ -60,9 +63,12 @@ public class Driver {
                     String[] coordinate = input.split(" ");
                     int row = Integer.parseInt(coordinate[1]);
                     int col = Integer.parseInt(coordinate[2]);
-                    if(user.getSunCount() >= 100){
+                    if(user.getSunCount() >= 100 && Plant.peashooterCD == 0){
+                        Plant.peashooterCD = Plant.PEASHOOTER_CD;
                         board.placePlant(row, col, new Peashooter(row, col));
-                        user.buyPlant(50);
+                        user.buyPlant(100);
+                    }else if(user.getSunCount() >= 100 && Plant.peashooterCD != 0){
+                        System.out.println("Peashooter on cooldown!");
                     }else{
                         System.out.println("Not enough sun!");
                     }
