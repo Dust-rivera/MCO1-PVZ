@@ -7,7 +7,9 @@ public class Plant {
     private int dirDamage;
     private int[][] position;
 
-    public Plant(int cost, int health, int dirDamage){
+    public Plant(int cost, int health, int dirDamage, int x, int y){
+        xPosition = x;
+        yPosition = y;
         this.cost = cost;
         this.health = health;
         this.dirDamage = dirDamage;
@@ -39,5 +41,10 @@ public class Plant {
 
     public int getYPosition() {
         return yPosition;
+    }
+
+    public static void main(String[] args){
+        Sunflower s = new Sunflower(1, 1);
+        System.out.println(s.getXPosition() + s.getYPosition());
     }
 }

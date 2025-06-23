@@ -5,8 +5,8 @@ public class Peashooter extends Plant{
     private int damage = 2; 
     private int tick = 0;
 
-    public Peashooter(){
-        super(4, 10, 15);
+    public Peashooter(int x, int y){
+        super(4, 10, 15, x, y);
     }
 
     public void update(Board board){

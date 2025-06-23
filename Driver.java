@@ -44,7 +44,7 @@ public class Driver {
                     int row = Integer.parseInt(coordinate[1]);
                     int col = Integer.parseInt(coordinate[2]);
                     if(user.getSunCount() >= 25){
-                        board.placePlant(row, col, new Sunflower());
+                        board.placePlant(row, col, new Sunflower(row, col));
                         user.buyPlant(25);
                     }else{
                         System.out.println("Not enough sun!");
@@ -63,9 +63,8 @@ public class Driver {
 
 
 
-//CherryBomb cherryBomb = new CherryBomb();
-    //board.placePlant(2, 2, cherryBomb);
-    
+
+
         // board.placePlant(1, 1, sunflower);
 
         // System.out.println(board);
