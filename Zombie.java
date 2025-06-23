@@ -2,7 +2,7 @@ public class Zombie {
 
     private int speed;
     private int damage;
-    private int health = 3;
+    private int health;
     private static int zombieCount = 0;
 
 

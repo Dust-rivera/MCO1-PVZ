@@ -23,15 +23,11 @@ public class Tile {
         return zombie;
     }
 
-    public void removeZombie(){
-        this.zombie = null;
-    }
-
     public static void main(String[] args){
 
         Tile tile = new Tile();
-        //Sunflower sunflower = new Sunflower();
-        //tile.setPlant(sunflower);
+        Sunflower sunflow = new Sunflower();
+        tile.setPlant(sunflow);
 
         System.out.println(tile.isOccupied());
     }

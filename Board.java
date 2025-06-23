@@ -33,37 +33,11 @@ public class Board {
     }
 
     public int getRows(){
-        return board.length;
+        return 5;
     }
 
     public int getCol(){
-        return board[0].length;
-    }
-
-    public Tile getTile(int row, int col){
-        return board[row][col];
-    }
-
-    public int getTileRow(Tile target){
-        for(int r = 0; r < board.length; r++){
-            for(int c = 0; c < board[0].length; c++){
-                if(board[r][c] == target){
-                    return r;
-                }
-            }
-        }
-        return -1;
-    }
-
-    public int getTileCol(Tile target){
-        for(int r = 0; r < board.length; r++){
-            for(int c = 0; c < board[0].length; c++){
-                if(board[r][c] == target){
-                    return c;
-                }
-            }
-        }
-        return -1;
+        return 9;
     }
 
     public void generateSun(){
@@ -73,14 +47,14 @@ public class Board {
     public void update(){
         tickCount++;
         
-        if(tickCount % 40 == 0){
+        if(tickCount % 3 == 0){
             generateSun();
-        }
-        for (int r = 0; r < board.length; r++) {
-            for (int c = 0; c < board[0].length; c++) {
-                Plant plant = board[r][c].getPlant();
-                if (plant != null) {
-                    plant.update(this);
+            for (int r = 0; r < board.length; r++) {
+                for (int c = 0; c < board[0].length; c++) {
+                    Plant plant = board[r][c].getPlant();
+                    if (plant != null) {
+                        plant.update(this);
+                    }
                 }
             }
         }
@@ -100,7 +74,7 @@ public class Board {
     }
 
     public void placePlant(int row, int col, Plant plant){
-        //plants[plantCount] = plant;
+        plants[plantCount] = plant;
         if(!board[row][col].isOccupied()){
             board[row][col].setPlant(plant);
         }
@@ -112,11 +86,6 @@ public class Board {
             board[row][col].setZombie(zombie);
         }
         System.out.println("Zombie is at (" + row + ", " + col + ")");
-    }
-
-    public static void main(String[] args){
-        // Board b = new Board(new User());
-        // System.out.println(b.getTileRow(b[3][3]));
     }
 
 }
