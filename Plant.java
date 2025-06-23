@@ -1,5 +1,6 @@
 public class Plant {
-    
+    private int xPosition;
+    private int yPosition;
     private int cost;
     private int health;
     private static int plantCount = 0;
@@ -30,5 +31,13 @@ public class Plant {
 
     public int getDirDamage() {
         return dirDamage;
+    }
+
+      public int getXPosition() {
+        return xPosition;
+    }
+
+    public int getYPosition() {
+        return yPosition;
     }
 }
