@@ -25,11 +25,12 @@ public class GameTimer {
                 }
 
                 System.out.println("Time left: " + count + " seconds");
+                
                 board.display(); 
                 count--;
             }
         };
 
-        timer.scheduleAtFixedRate(timerTask, 0, 1000);// TICKS EVERY SECOND
+        timer.scheduleAtFixedRate(timerTask, 0, 500);// TICKS EVERY SECOND
     }
 }
