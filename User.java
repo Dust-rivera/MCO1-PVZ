@@ -3,7 +3,7 @@ public class User {
     private int sunCount;
 
     public User(){
-        sunCount = 50;
+        sunCount = 100;
     }
 
     public void buyPlant(int amount){

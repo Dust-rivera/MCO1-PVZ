@@ -63,6 +63,10 @@ public class Plant {
         return yPosition;
     }
 
+    public void decreaseHealth(int damage){
+        this.health -= damage;
+    }
+
     public static void main(String[] args){
         Sunflower s = new Sunflower(1, 1);
         System.out.println(s.getXPosition() + s.getYPosition());

@@ -5,6 +5,8 @@ public class Driver {
     private static boolean running = true;
     private static int timer = 180;
     private static int tickTimer = 0;
+    public static String message = "";
+    private static int stringTick;
     public static void main(String[] args){
 
         User user = new User();
@@ -16,6 +18,7 @@ public class Driver {
                 board.update(); // game logic: move zombies, shoot, etc.
                 System.out.println("Timer: " + timer + " seconds");
                 board.display(); // print current board
+                System.out.println("Game message: " + message);
                 System.out.println("Sun dropped: " + board.getSunCount());
                 System.out.println("Sun Points: " + user.getSunCount());
                 System.out.print("Enter comamnd: ");
@@ -28,12 +31,16 @@ public class Driver {
                 System.out.print("\033[H\033[2J");
                 System.out.flush();
 
-                if(tickTimer % 4 == 0){
-                    timer--;
-                }
+                if(!message.equals("")) stringTick++;
 
-                if(timer == 0)
-                    running = false;
+                if(stringTick == 4){
+                    message = "";
+                    stringTick = 0;
+                } 
+
+                if(tickTimer % 4 == 0) timer--;
+
+                if(timer == 0) running = false;
             }
         });
 
@@ -54,9 +61,10 @@ public class Driver {
                         board.placePlant(row, col, new Sunflower(row, col));
                         user.buyPlant(50);
                     }else if(user.getSunCount() >= 50 && Plant.sunflowerCD != 0){
-                        System.out.println("Sunflower on cooldown!");
+                        message = "Sunflower on cooldown!";
                     }else{
-                        System.out.println("Not enough sun!");
+                        message = "Not enough Sun!";
+
                     }
                     coordinate = null;
                 }else if(input.startsWith("peashooter")){
@@ -68,11 +76,12 @@ public class Driver {
                         board.placePlant(row, col, new Peashooter(row, col));
                         user.buyPlant(100);
                     }else if(user.getSunCount() >= 100 && Plant.peashooterCD != 0){
-                        System.out.println("Peashooter on cooldown!");
+                        message = "Peashooter on cooldown!";
                     }else{
-                        System.out.println("Not enough sun!");
+                        message = "Not enough Sun!";
                     }
                 }else if(input.equalsIgnoreCase("collect")){
+                    message = "Sun collected";
                     user.collectSun(board.getSunCount(), board);
                 }
 
@@ -82,14 +91,11 @@ public class Driver {
 
         gameLoop.start();
         inputLoop.start();
+
         board.placeZombie(0, 8, new Zombie());
         if(timer == 0){
             running = false;
         }
-
-
-
-
 
         // board.placePlant(1, 1, sunflower);
 
