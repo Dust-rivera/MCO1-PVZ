@@ -12,7 +12,6 @@ public class Board {
     private User player;
     private List<Zombie> zombieList;
     private int sunCount = 0;
-    private int secondsPassed = 0;
     private Timer gameTimer;  // Timer for game updates
 
     public Board(User player) {
