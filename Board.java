@@ -1,82 +1,88 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Board {
 
     private Tile[][] board;
     private int tickCount = 0;
-    private int secondsPassed = 0;  // Track the number of seconds passed
+    private int secondsPassed = 0;
     private User player;
     private List<Zombie> zombieList;
     private int sunCount = 0;
-    private Timer gameTimer;  // Timer for game updates
+    private boolean running = true;
 
     public Board(User player) {
         this.player = player;
         this.zombieList = new ArrayList<>();
 
-        // Initialize the game board
         board = new Tile[5][9];
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 9; j++) {
                 board[i][j] = new Tile();
             }
         }
-
-        // Start the game timer
-        startGameTimer();
     }
 
-    // Start the game timer to update every 250 milliseconds (4 ticks per second)
-    private void startGameTimer() {
-        gameTimer = new Timer();
+    public void startGameLoop() {
+    Thread gameThread = new Thread(() -> {
+        while (secondsPassed < 180 && running) {
+            tickCount++; // 
 
-        // Schedule the game loop to run every 250 milliseconds (this will count as 1 tick)
-        gameTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                update();  // Call the update method to handle game logic
+            // Update game logic
+            update();
+
+            // Then display results
+            display();
+            System.out.println("Sun dropped: " + sunCount);
+            System.out.println("Time left: " + (180 - secondsPassed) + " seconds");
+
+            try {
+                Thread.sleep(250); // 1 tick = 250 ms
+            } catch (InterruptedException e) {
+                System.out.println("Game loop interrupted.");
+                break;
             }
-        }, 0, 250);  // 250 milliseconds = 1 tick
-    }
 
-    // Cancel the game timer when the game ends
-    public void stopGameTimer() {
-        if (gameTimer != null) {
-            gameTimer.cancel();
-            System.out.println("Game Over! Timer stopped.");
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
         }
+
+        System.out.println("Game Over!");
+    });
+
+    gameThread.start();
+}
+
+
+    public void stopGameLoop() {
+        running = false;
     }
 
-    // Generate sun every 40 ticks (1 second)
     public void generateSun() {
         sunCount++;
     }
 
-    // Spawn a zombie at a random row, at the rightmost column
-    public void spawnZombie() {
-        Random rand = new Random();
-        int row = rand.nextInt(5);  // Random row (0-4)
-        Zombie zombie = new Zombie();
-        placeZombie(row, 8, zombie);  // Spawn zombie at the last column (rightmost)
-        System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
-    }
+   public void spawnZombie() {
+    Random rand = new Random();
+    int row = rand.nextInt(5); // 0 to 4
+    Zombie zombie = new Zombie();
+    zombie.setYPosition(row); // <-- This is important!
+    placeZombie(row, 8, zombie);
+    System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
+}
 
-    // Spawn wave of zombies from 171 to 180 seconds
+
     public void spawnWaveOfZombies() {
         Random rand = new Random();
-        for (int i = 0; i < 10; i++) {  // Wave of 10 zombies
-            int row = rand.nextInt(5);  // Random row (0-4)
+        for (int i = 0; i < 10; i++) {
+            int row = rand.nextInt(5);
             Zombie zombie = new Zombie();
-            placeZombie(row, 8, zombie);  // Place zombies at the last column
+            placeZombie(row, 8, zombie);
             System.out.println("Wave zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
         }
     }
 
-    // Place a zombie at the specified row and column
     public void placeZombie(int row, int col, Zombie zombie) {
         if (!board[row][col].isOccupied()) {
             board[row][col].setZombie(zombie);
@@ -84,88 +90,124 @@ public class Board {
         }
     }
 
-    // Place a plant on the board at the specified row and column
     public void placePlant(int row, int col, Plant plant) {
         if (!board[row][col].isOccupied()) {
             board[row][col].setPlant(plant);
-            System.out.println("Placed plant at (" + row + ", " + col ")");
+            System.out.println("Placed plant at (" + row + ", " + col + ") ");
         } else {
             System.out.println("Tile (" + row + ", " + col + ") is already occupied.");
         }
     }
 
-    // Move zombies from right to left every 4 ticks (1 second)
     public void moveZombies() {
-        List<Zombie> zombiesToRemove = new ArrayList<>();
-        for (Zombie zombie : zombieList) {
-            zombie.move();  // Move each zombie one step to the left
+    List<Zombie> zombiesToRemove = new ArrayList<>();
 
-            // Check if zombie reaches the leftmost side (past column 0)
-            if (zombie.getXPosition() < 0) {
-                zombiesToRemove.add(zombie);  // Zombie has moved off the board to the left
-                System.out.println("Zombie reached the left side.");
+    for (Zombie zombie : zombieList) {
+        int x = zombie.getXPosition();
+        int y = zombie.getYPosition();
+
+        // Attack logic
+        if (x >= 0 && x < 9) {
+            Tile tile = board[y][x];
+            Plant plant = tile.getPlant();
+
+            if (plant != null) {
+                zombie.incrementAttackTick();
+                if (zombie.getAttackTick() >= 4) { // attack every second
+                    plant.decreaseHealth(zombie.getDamage());
+                    zombie.resetAttackTick();
+                    System.out.println("Zombie at (" + y + ", " + x + ") attacked plant: " + plant.getHealth() + " HP left");
+
+                    if (plant.getHealth() <= 0) {
+                        tile.setPlant(null);
+                        System.out.println("Plant at (" + y + ", " + x + ") died.");
+                    }
+                }
+                continue; // stop zombie movement when attacking
             }
         }
-        zombieList.removeAll(zombiesToRemove);  // Remove zombies that moved off-screen
+
+        // Remove from old tile
+        if (x >= 0 && x < 9) {
+            board[y][x].setZombie(null);
+        }
+
+        zombie.move(); // Move if no plant blocks
+
+        int newX = zombie.getXPosition();
+        if (newX == 0) {
+            zombie.incrementTicksAtCol0();
+            board[y][newX].setZombie(zombie);
+            if (zombie.getTicksAtCol0() >= 4) {
+                zombiesToRemove.add(zombie);
+                System.out.println("Zombie left the screen after 4 ticks at column 0.");
+            }
+        } else if (newX > 0 && newX < 9) {
+            board[y][newX].setZombie(zombie);
+        }
     }
 
-    // Update the board based on the timer and game logic
-    public void update() {
-        tickCount++;
+    zombieList.removeAll(zombiesToRemove);
+}
 
-        // Every 40 ticks (1 second), generate sun
-        if (tickCount % 40 == 0) {
+
+    public void update() {
+    tickCount++;
+
+    // Every 1 second (every 4 ticks)
+    if (tickCount % 4 == 0) {
+        secondsPassed++;
+        moveZombies();
+
+        // Drop sun every 10 seconds
+        if (secondsPassed % 10 == 0) {
             generateSun();
         }
 
-        // Spawn zombies based on the timer intervals
-        if (secondsPassed >= 30 && secondsPassed <= 80 ) {  // Every 10 seconds (40 ticks)
+        // Zombie spawning rules based on specified time periods
+        if (secondsPassed >= 30 && secondsPassed <= 80 && secondsPassed % 10 == 0) {
             spawnZombie();
-        } else if (secondsPassed >= 81 && secondsPassed <= 140 ) {  // Every 5 seconds (20 ticks)
+        } else if (secondsPassed >= 81 && secondsPassed <= 140 && secondsPassed % 5 == 0) {
             spawnZombie();
-        } else if (secondsPassed >= 141 && secondsPassed <= 170) {  // Every 3 seconds (12 ticks)
+        } else if (secondsPassed >= 141 && secondsPassed <= 170 && secondsPassed % 3 == 0) {
             spawnZombie();
         } else if (secondsPassed >= 171 && secondsPassed <= 180 && zombieList.isEmpty()) {
-            spawnWaveOfZombies();  // Wave of zombies
-        }
-
-        // Move zombies every 4 ticks (1 second)
-        if (tickCount % 4 == 0) {
-            moveZombies();
-        }
-
-        // Increment secondsPassed every 4 ticks (1 second)
-        if (tickCount % 4 == 0) {
-            secondsPassed++;
-        }
-
-        // Stop the game when the timer reaches 180 seconds
-        if (secondsPassed >= 180) {
-            stopGameTimer();  // Stop the game timer when the game ends
-            System.out.println("Game Over! The timer has reached zero.");
+            spawnWaveOfZombies();
         }
     }
+}
 
-    // Display the current state of the board
+
+
+
     public void display() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-
-        for (int i = 0; i < 5; i++) {  // 5 rows
+        for (int i = 0; i < 5; i++) {
             System.out.println("---------------------------------------------");
-            for (int j = 0; j < 9; j++) {  // 9 columns
-                if (j == 0) System.out.print("| ");  // Start of row
-                boolean occupied = false;
+            for (int j = 0; j < 9; j++) {
+                if (j == 0) System.out.print("| ");
 
-                // Check if any zombie is at this position
+                Tile tile = board[i][j];
+                String cell = "0";
+
                 for (Zombie zombie : zombieList) {
                     if (zombie.getYPosition() == i && zombie.getXPosition() == j) {
-                        occupied = true;
+                        cell = "Z";
                         break;
                     }
                 }
 
-                System.out.print((occupied ? "Z" : "0") + " | ");
+                if (cell.equals("0") && tile.getPlant() != null) {
+                    Plant plant = tile.getPlant();
+                    if (plant instanceof Sunflower) {
+                        cell = "S";
+                    } else if (plant instanceof Peashooter) {
+                        cell = "P";
+                    } else if (plant instanceof CherryBomb) {
+                        cell = "B";
+                    }
+                }
+
+                System.out.print(cell + " | ");
             }
             System.out.println();
         }

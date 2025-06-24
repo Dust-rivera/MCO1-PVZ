@@ -14,6 +14,8 @@ public class Plant {
     public static int peashooterCD = 0;
     public static int cherryBombCD = 0;
 
+    
+
 
     public Plant(int cost, int health, int dirDamage, int x, int y){
         xPosition = x;
@@ -22,7 +24,11 @@ public class Plant {
         this.health = health;
         this.dirDamage = dirDamage;
     }
+    public void decreaseHealth(int damage) {
+    
+        this.health -= damage;
 
+    }
     public void update(Board board){
         
     }

@@ -1,6 +1,3 @@
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class GameTimer {
     private Timer timer;
     private Board board;
@@ -12,7 +9,7 @@ public class GameTimer {
     public void start() {
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
-            int count = 180;
+            int count = 180;  // Game runs for 180 seconds
 
             @Override
             public void run() {
@@ -22,15 +19,17 @@ public class GameTimer {
                 if (count < 0) {
                     System.out.println("Game done!");
                     timer.cancel();
+                    return;
                 }
 
                 System.out.println("Time left: " + count + " seconds");
-                
                 board.display(); 
+                System.out.println("Sun dropped: " + board.getSunCount());
                 count--;
             }
         };
 
-        timer.scheduleAtFixedRate(timerTask, 0, 250);// TICKS EVERY SECOND
+        // Schedule this to match 4 ticks = 1 second → 1000ms
+        timer.scheduleAtFixedRate(timerTask, 0, 250);
     }
 }

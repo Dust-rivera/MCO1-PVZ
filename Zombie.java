@@ -1,56 +1,86 @@
 public class Zombie {
+    private int xPosition;
+    private int yPosition;
+    private final int speed = 1;
+    private final int damage = 10;
+    private int health = 100;
+    private int ticksAtCol0 = 0;
+    private long lastAttackTime = 0;
+    private final int attackCooldown = 2000; // 2 seconds
+    private int attackTick = 0;
 
-    private int speed;
-    private int damage;
-    private int health = 3;
-    private static int zombieCount = 0;
-    private int xPosition;  // Horizontal position on the board (starts from 8 to 0)
-    private int yPosition;  // Vertical position (row) on the board
-
-    // Default constructor sets the starting position
-    public Zombie() {
-        this.xPosition = 8;  // Start at the rightmost position (column 8)
-        this.yPosition = (int) (Math.random() * 5);  // Random row for simplicity (0 to 4)
+    public Zombie() { // accept row
+        this.xPosition = 8;        // rightmost column
+        this.yPosition = yPosition;
     }
 
-    // Move the zombie to the left by 1 tile
+    public void incrementAttackTick() {
+        attackTick++;
+    }
+
+    public void resetAttackTick() {
+        attackTick = 0;
+    }
+
+    public int getAttackTick() {
+        return attackTick;
+    }
+
     public void move() {
-        if (this.xPosition > 0) {  // Ensure the zombie doesn't move past the leftmost side
-            this.xPosition--;  // Move one step to the left (decrease xPosition)
+        if (xPosition > 0) {
+            xPosition -= speed;
         }
     }
 
-    // Get the zombie's current xPosition (horizontal position)
     public int getXPosition() {
         return xPosition;
     }
 
-    // Get the zombie's current yPosition (row position)
     public int getYPosition() {
         return yPosition;
     }
 
-    public void takeDamage(int amount){
-        health -= amount;
+    public void setYPosition(int y) {
+        this.yPosition = y;
     }
 
-    public boolean isDead(){
-        return health <= 0;
+    public void setXPosition(int x) {
+        this.xPosition = x;
     }
 
     public int getDamage() {
         return damage;
     }
 
+    public void decreaseHealth(int amount) {
+        health -= amount;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
+    }
+
     public int getHealth() {
         return health;
     }
 
-    public int getSpeed() {
-        return speed;
+    public void incrementTicksAtCol0() {
+        ticksAtCol0++;
     }
 
-    public static int getZombieCount() {
-        return zombieCount;
+    public int getTicksAtCol0() {
+        return ticksAtCol0;
+    }
+
+    public long getLastAttackTime() {
+        return lastAttackTime;
+    }
+
+    public void setLastAttackTime(long time) {
+        this.lastAttackTime = time;
+    }
+
+    public boolean canAttack() {
+        return System.currentTimeMillis() - lastAttackTime >= attackCooldown;
     }
 }
