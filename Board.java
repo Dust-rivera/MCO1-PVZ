@@ -21,7 +21,7 @@ public class Board {
 
         //gameTimer = new GameTimer(this);
         //gameTimer.start(); 
-                
+      //yooooooooboard
     }
 
     public void setSun(){
