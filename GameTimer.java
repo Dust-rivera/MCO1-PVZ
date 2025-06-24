@@ -31,6 +31,6 @@ public class GameTimer {
             }
         };
 
-        timer.scheduleAtFixedRate(timerTask, 0, 1000);// TICKS EVERY SECOND
+        timer.scheduleAtFixedRate(timerTask, 0, 250);// TICKS EVERY SECOND
     }
 }
