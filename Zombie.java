@@ -10,7 +10,7 @@ public class Zombie {
     private int attackTick = 0;
 
     public Zombie() { // accept row
-        this.xPosition = 8;        // rightmost column
+        this.xPosition = 8; // rightmost column
         this.yPosition = yPosition;
     }
 

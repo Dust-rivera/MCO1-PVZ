@@ -24,7 +24,7 @@ public class Driver {
                 System.out.print("Enter comamnd: ");
                 tickTimer++;
                 try {
-                    Thread.sleep(250); // 1-second tick
+                    Thread.sleep(10); // 1-second tick
                 } catch (InterruptedException e) {
                     break;
                 }
@@ -52,7 +52,7 @@ public class Driver {
 
                 if(input.equalsIgnoreCase("exit")){
                     running = false;
-                }else if(input.startsWith("sunflower")){
+                }else if(input.startsWith("S") || input.startsWith("s")){
                     String[] coordinate = input.split(" ");
                     int row = Integer.parseInt(coordinate[1]);
                     int col = Integer.parseInt(coordinate[2]);
@@ -67,7 +67,7 @@ public class Driver {
 
                     }
                     coordinate = null;
-                }else if(input.startsWith("peashooter")){
+                }else if(input.startsWith("P") || input.startsWith("p")){
                     String[] coordinate = input.split(" ");
                     int row = Integer.parseInt(coordinate[1]);
                     int col = Integer.parseInt(coordinate[2]);

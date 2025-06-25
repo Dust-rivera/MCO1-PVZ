@@ -8,11 +8,9 @@ public class Plant {
 
     public static final int SUNFLOWER_CD = 30;
     public static final int PEASHOOTER_CD = 30;
-    public static final int CHERRYBOMB_CD = 200;
 
     public static int sunflowerCD = 0;
     public static int peashooterCD = 0;
-    public static int cherryBombCD = 0;
 
 
     public Plant(int cost, int health, int dirDamage, int x, int y){
@@ -25,10 +23,6 @@ public class Plant {
 
     public void update(Board board){
         
-    }
-
-    public static int getCherryBombCD() {
-        return cherryBombCD;
     }
 
     public static int getPeashooterCD() {

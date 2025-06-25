@@ -10,6 +10,7 @@ public class Board {
     private User player;
     private List<Zombie> zombieList;
     private int sunCount = 0;
+    private boolean finalWaveFlag = true;
 
 
     public Board(User player) {
@@ -75,6 +76,7 @@ public class Board {
             //     System.out.println("Zombie left the screen after 4 ticks at column 0.");
             // }
             zombiesToRemove.add(zombie);
+            //System.exit(0);// GAME ENDS
 
         } else if (x > 0 && x < 9) {
             board[y][x - 1].setZombie(zombie);
@@ -102,16 +104,19 @@ public class Board {
         zombie.setYPosition(row);
         placeZombie(row, 8, zombie);  // Spawn zombie at the last column (rightmost)
         //System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
-        Driver.message = "Zombie spawned at (" + row + ", 8) at time: " + secondsPassed;
+        if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
+                Driver.message = "Zombie spawned at (" + row + ", 8) at time: " + secondsPassed;
+        }
+        
     }
 
-    public void spawnZombie(int x) {
-        Zombie zombie = new Zombie();
-        zombie.setYPosition(x);
-        placeZombie(x, 8, zombie);  // Spawn zombie at the last column (rightmost)
-        //System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
-        Driver.message = "Zombie spawned at (" + x + ", 8) at time: " + secondsPassed;
-    }
+    // public void spawnZombie(int x) {
+    //     Zombie zombie = new Zombie();
+    //     zombie.setYPosition(x);
+    //     placeZombie(x, 8, zombie);  // Spawn zombie at the last column (rightmost)
+    //     //System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
+    //     Driver.message = "Zombie spawned at (" + x + ", 8) at time: " + secondsPassed;
+    // }
 
     // Spawn wave of zombies from 171 to 180 seconds
     public void spawnWaveOfZombies() {
@@ -175,9 +180,14 @@ public class Board {
                 spawnZombie();
             } else if (secondsPassed >= 141 && secondsPassed <= 170 && secondsPassed % 3 == 0) {
                 spawnZombie();
-            } else if (secondsPassed >= 171 && secondsPassed <= 180) {
+            } else if (secondsPassed >= 171 && secondsPassed < 180 && !board[0][8].isOccupied()
+                && !board[1][8].isOccupied()&& !board[2][8].isOccupied()&& !board[3][8].isOccupied() && !board[4][8].isOccupied() && finalWaveFlag) {
+                finalWaveFlag = false;
                 Driver.message = "A wave of zombies has appeared";
                 spawnWaveOfZombies();
+            } else if (secondsPassed == 180) {
+                System.exit(0);
+                System.out.print("GAME WON!!!!!");
             }
         }
 
@@ -232,8 +242,6 @@ public class Board {
                         cell = "S";
                     } else if (plant instanceof Peashooter) {
                         cell = "P";
-                    } else if (plant instanceof CherryBomb) {
-                        cell = "B";
                     }
                 }
 
