@@ -3,7 +3,7 @@ public class Zombie {
     private int yPosition;
     private final int speed = 1;
     private final int damage = 100;
-    private int health = 1;
+    private int health = 8;
     private int ticksAtCol0 = 0;
     private long lastAttackTime = 0;
     private final int attackCooldown = 2000; // 2 seconds

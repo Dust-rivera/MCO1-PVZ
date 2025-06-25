@@ -69,19 +69,20 @@ public class Driver {
         inputLoop.setDaemon(true);
         inputLoop.start();
         board.placePlant(0, 0, new Peashooter(0, 0));
+        //board.placeZombie(0, 8, new Zombie());
         board.placePlant(1, 0, new Peashooter(0, 0));
         board.placePlant(2, 0, new Peashooter(0, 0));
         board.placePlant(3, 0, new Peashooter(0, 0));
         board.placePlant(4, 0, new Peashooter(0, 0));
 
         while (driver.getRunning()) {
-            board.update(); 
+            board.update();
             System.out.println("Timer: " + timer + " seconds");
             board.display(); // print current board
             // game logic: move zombies, shoot, etc.
             tickTimer++;
             try {
-                Thread.sleep(10); // 1-second tick
+                Thread.sleep(250); // 1-second tick
             } catch (InterruptedException e) {
                 break;
             }

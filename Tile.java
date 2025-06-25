@@ -1,7 +1,7 @@
 public class Tile {
 
-    private Plant plant;
-    private Zombie zombie;
+    private Plant plant = null;
+    private Zombie zombie = null;
 
     public boolean isOccupied(){
         return (plant != null || zombie != null);

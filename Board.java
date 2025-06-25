@@ -170,9 +170,9 @@ public class Board {
             board[row][col].setZombie(zombie);
             zombieList.add(zombie);
         }else{
-            // System.out.println("didnt work");
+            //System.out.println("didnt work");
             // System.exit(0);
-             spawnZombie();
+            spawnZombie();
         }
     }
 
