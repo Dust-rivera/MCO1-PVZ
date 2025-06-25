@@ -6,7 +6,7 @@ public class Peashooter extends Plant{
     private int tick = 0;
 
     public Peashooter(int x, int y){
-        super(100, 6, 15, x, y);
+        super(100, 600, 15, x, y);
     }
 
     public void update(Board board){
@@ -24,11 +24,11 @@ public class Peashooter extends Plant{
                 if(zombie != null){
                     zombie.takeDamage(damage);
                         //System.out.println("zombie damage");
-                        Driver.message = "Zombie damaged!"; 
+                        board.getDriver().setMessage("Zombie damaged!"); 
                     if(zombie.isDead()){
                         target.removeZombie();
                         // System.out.println("zombie dead");
-                        Driver.message = "Zombie dead!"; 
+                        board.getDriver().setMessage("Zombie dead!"); 
                         break;
                     }
                     break;

@@ -4,7 +4,7 @@ public class Sunflower extends Plant{
     private final int BASE_TICK = 96; 
 
     public Sunflower(int x, int y){
-        super(4, 10, 15, x, y);
+        super(4, 600, 15, x, y);
     }
 
     @Override

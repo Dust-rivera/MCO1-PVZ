@@ -11,11 +11,13 @@ public class Board {
     private List<Zombie> zombieList;
     private int sunCount = 0;
     private boolean finalWaveFlag = true;
+    private Driver driver;
 
 
-    public Board(User player) {
+    public Board(User player, Driver driver) {
         this.player = player;
         this.zombieList = new ArrayList<>();
+        this.driver = driver;
 
         // Initialize the game board
         board = new Tile[5][9];
@@ -26,6 +28,43 @@ public class Board {
         }
 
        
+    }
+
+    public void input(Driver driver, Board board, String input){
+        if(input.equalsIgnoreCase("exit")){
+                    driver.setRunning(false);
+                }else if(input.startsWith("S") || input.startsWith("s")){
+                    String[] coordinate = input.split(" ");
+                    int row = Integer.parseInt(coordinate[1]);
+                    int col = Integer.parseInt(coordinate[2]);
+                    if(player.getSunCount() >= 50 && Plant.sunflowerCD == 0){
+                        Plant.sunflowerCD = Plant.SUNFLOWER_CD;
+                        board.placePlant(row, col, new Sunflower(row, col));
+                        player.buyPlant(50);
+                    }else if(player.getSunCount() >= 50 && Plant.sunflowerCD != 0){
+                        driver.setMessage("Sunflower on cooldown!");
+                    }else{
+                        driver.setMessage("Not enough Sun!");
+
+                    }
+                    coordinate = null;
+                }else if(input.startsWith("P") || input.startsWith("p")){
+                    String[] coordinate = input.split(" ");
+                    int row = Integer.parseInt(coordinate[1]);
+                    int col = Integer.parseInt(coordinate[2]);
+                    if(player.getSunCount() >= 100 && Plant.peashooterCD == 0){
+                        Plant.peashooterCD = Plant.PEASHOOTER_CD;
+                        board.placePlant(row, col, new Peashooter(row, col));
+                        player.buyPlant(100);
+                    }else if(player.getSunCount() >= 100 && Plant.peashooterCD != 0){
+                        driver.setMessage(input);
+                    }else{
+                        driver.setMessage("Not enough Sun!");
+                    }
+                }else if(input.equalsIgnoreCase("collect")){
+                    driver.setMessage("Sun collected");
+                    player.collectSun(board.getSunCount(), board);
+                }
     }
 
     public void moveZombies() {
@@ -69,14 +108,9 @@ public class Board {
 
          // Move if no plant blocks
         if (x == 0) {
-            // zombie.incrementTicksAtCol0();
-            // board[y][newX].setZombie(zombie);
-            // if (zombie.getTicksAtCol0() >= 4) {
-            //     zombiesToRemove.add(zombie);
-            //     System.out.println("Zombie left the screen after 4 ticks at column 0.");
-            // }
             zombiesToRemove.add(zombie);
-            //System.exit(0);// GAME ENDS
+            System.out.println("\nZombie has entered your home! \nGAME OVER");
+            driver.setRunning(false);// GAME ENDS
 
         } else if (x > 0 && x < 9) {
             board[y][x - 1].setZombie(zombie);
@@ -105,7 +139,7 @@ public class Board {
         placeZombie(row, 8, zombie);  // Spawn zombie at the last column (rightmost)
         //System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
         if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
-                Driver.message = "Zombie spawned at (" + row + ", 8) at time: " + secondsPassed;
+                driver.setMessage("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
         }
         
     }
@@ -115,7 +149,7 @@ public class Board {
     //     zombie.setYPosition(x);
     //     placeZombie(x, 8, zombie);  // Spawn zombie at the last column (rightmost)
     //     //System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
-    //     Driver.message = "Zombie spawned at (" + x + ", 8) at time: " + secondsPassed;
+    //     driver.setMessage(input); = "Zombie spawned at (" + x + ", 8) at time: " + secondsPassed;
     // }
 
     // Spawn wave of zombies from 171 to 180 seconds
@@ -147,10 +181,10 @@ public class Board {
         if (!board[row][col].isOccupied()) {
             board[row][col].setPlant(plant);
             //System.out.println("Placed plant at (" + row + ", " + col + ")");
-            Driver.message = "Placed plant at (" + row + ", " + col + ")";
+            driver.setMessage("Placed plant at (" + row + ", " + col + ")");
         } else {
             //System.out.println("Tile (" + row + ", " + col + ") is already occupied.");
-            Driver.message = "Tile (" + row + ", " + col + ") is already occupied.";
+            driver.setMessage("Tile (" + row + ", " + col + ") is already occupied.");
         }
     }
 
@@ -183,10 +217,10 @@ public class Board {
             } else if (secondsPassed >= 171 && secondsPassed < 180 && !board[0][8].isOccupied()
                 && !board[1][8].isOccupied()&& !board[2][8].isOccupied()&& !board[3][8].isOccupied() && !board[4][8].isOccupied() && finalWaveFlag) {
                 finalWaveFlag = false;
-                Driver.message = "A wave of zombies has appeared";
+                driver.setMessage("A wave of zombies has appeared");
                 spawnWaveOfZombies();
             } else if (secondsPassed == 180) {
-                System.exit(0);
+                driver.setRunning(false);
                 System.out.print("GAME WON!!!!!");
             }
         }
@@ -250,6 +284,10 @@ public class Board {
             System.out.println();
         }
         System.out.println("---------------------------------------------");
+        System.out.println("Game message: " + driver.getMessage());
+        System.out.println("Sun dropped: " + this.getSunCount());
+        System.out.println("Sun Points: " + player.getSunCount());
+        System.out.print("Enter comamnd: ");
     }
 
     public void setSun(){
@@ -292,5 +330,9 @@ public class Board {
 
     public int getSunCount() {
         return sunCount;
+    }
+
+    public Driver getDriver() {
+        return driver;
     }
 }

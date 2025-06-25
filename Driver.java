@@ -2,108 +2,110 @@ import java.util.Scanner;
 
 public class Driver {
 
-    private static boolean running = true;
+    private boolean running = true;
     private static int timer = 180;
     private static int tickTimer = 0;
-    public static String message = "";
+    private String message = "";
     private static int stringTick;
-    public static void main(String[] args){
+
+    public boolean getRunning() {
+        return this.running;
+    }
+
+    public void setRunning(boolean bool) {
+        running = bool;
+    }
+
+    public void setMessage(String string) {
+        message = string;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public static void main(String[] args) {
 
         User user = new User();
-        Board board = new Board(user);
-        //Sunflower sunflower = new Sunflower();
+        Driver driver = new Driver();
+        Board board = new Board(user, driver);
 
-        Thread gameLoop = new Thread(() -> {
-            while (running) {
-                board.update(); // game logic: move zombies, shoot, etc.
-                System.out.println("Timer: " + timer + " seconds");
-                board.display(); // print current board
-                System.out.println("Game message: " + message);
-                System.out.println("Sun dropped: " + board.getSunCount());
-                System.out.println("Sun Points: " + user.getSunCount());
-                System.out.print("Enter comamnd: ");
-                tickTimer++;
-                try {
-                    Thread.sleep(10); // 1-second tick
-                } catch (InterruptedException e) {
-                    break;
-                }
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
+        // Thread gameLoop = new Thread(() -> {
+        // while (driver.getRunning()) {
+        // System.out.println("Timer: " + timer + " seconds");
+        // board.display(); // print current board
+        // board.update(); // game logic: move zombies, shoot, etc.
+        // tickTimer++;
+        // try {
+        // Thread.sleep(10); // 1-second tick
+        // } catch (InterruptedException e) {
+        // break;
+        // }
+        // System.out.print("\033[H\033[2J");
+        // System.out.flush();
 
-                if(!message.equals("")) stringTick++;
+        // if(!driver.getMessage().equals("")) stringTick++;
 
-                if(stringTick == 4){
-                    message = "";
-                    stringTick = 0;
-                } 
-
-                if(tickTimer % 4 == 0) timer--;
-
-                if(timer == 0) running = false;
-            }
-        });
+        // if(stringTick == 4){
+        // driver.setMessage("");
+        // stringTick = 0;
+        // }
+        // if(tickTimer % 4 == 0) timer--;
+        // if(timer == 0) driver.setRunning(false);
+        // }
+        // });
 
         Thread inputLoop = new Thread(() -> {
             Scanner scanner = new Scanner(System.in);
-            while(running){
-                
-                String input = scanner.nextLine();
-
-                if(input.equalsIgnoreCase("exit")){
-                    running = false;
-                }else if(input.startsWith("S") || input.startsWith("s")){
-                    String[] coordinate = input.split(" ");
-                    int row = Integer.parseInt(coordinate[1]);
-                    int col = Integer.parseInt(coordinate[2]);
-                    if(user.getSunCount() >= 50 && Plant.sunflowerCD == 0){
-                        Plant.sunflowerCD = Plant.SUNFLOWER_CD;
-                        board.placePlant(row, col, new Sunflower(row, col));
-                        user.buyPlant(50);
-                    }else if(user.getSunCount() >= 50 && Plant.sunflowerCD != 0){
-                        message = "Sunflower on cooldown!";
-                    }else{
-                        message = "Not enough Sun!";
-
-                    }
-                    coordinate = null;
-                }else if(input.startsWith("P") || input.startsWith("p")){
-                    String[] coordinate = input.split(" ");
-                    int row = Integer.parseInt(coordinate[1]);
-                    int col = Integer.parseInt(coordinate[2]);
-                    if(user.getSunCount() >= 100 && Plant.peashooterCD == 0){
-                        Plant.peashooterCD = Plant.PEASHOOTER_CD;
-                        board.placePlant(row, col, new Peashooter(row, col));
-                        user.buyPlant(100);
-                    }else if(user.getSunCount() >= 100 && Plant.peashooterCD != 0){
-                        message = "Peashooter on cooldown!";
-                    }else{
-                        message = "Not enough Sun!";
-                    }
-                }else if(input.equalsIgnoreCase("collect")){
-                    message = "Sun collected";
-                    user.collectSun(board.getSunCount(), board);
+            while (driver.getRunning()) {
+                if (scanner.hasNextLine()) {
+                    String input = scanner.nextLine();
+                    board.input(driver, board, input);
                 }
-
             }
             scanner.close();
         });
 
-        gameLoop.start();
+        inputLoop.setDaemon(true);
         inputLoop.start();
+        board.placePlant(0, 0, new Peashooter(0, 0));
+        board.placePlant(1, 0, new Peashooter(0, 0));
+        board.placePlant(2, 0, new Peashooter(0, 0));
+        board.placePlant(3, 0, new Peashooter(0, 0));
+        board.placePlant(4, 0, new Peashooter(0, 0));
 
-        //board.placeZombie(0, 8, new Zombie());
-        if(timer == 0){
-            running = false;
+        while (driver.getRunning()) {
+            board.update(); 
+            System.out.println("Timer: " + timer + " seconds");
+            board.display(); // print current board
+            // game logic: move zombies, shoot, etc.
+            tickTimer++;
+            try {
+                Thread.sleep(10); // 1-second tick
+            } catch (InterruptedException e) {
+                break;
+            }
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+
+            if (!driver.getMessage().equals(""))
+                stringTick++;
+
+            if (stringTick == 4) {
+                driver.setMessage("");
+                stringTick = 0;
+            }
+            if (tickTimer % 4 == 0)
+                timer--;
+            if (timer == 0)
+                driver.setRunning(false);
         }
 
-        // board.placePlant(1, 1, sunflower);
+        // gameLoop.start();
+        // inputLoop.start();
+        // gameLoop.join();
+        // inputLoop.join();
 
-        // System.out.println(board);
-        // Zombie zombie = new Zombie();
-        // board.placeZombie(2, 8, zombie);
-        // board.placePlant(0, 0, sunflower);
-        // board.display();
-        //System.out.println(board);
+        return;
     }
 }
