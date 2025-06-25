@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Board {
 
@@ -12,7 +10,7 @@ public class Board {
     private User player;
     private List<Zombie> zombieList;
     private int sunCount = 0;
-    private Timer gameTimer;  // Timer for game updates
+
 
     public Board(User player) {
         this.player = player;
@@ -26,8 +24,7 @@ public class Board {
             }
         }
 
-        // Start the game timer
-        //startGameTimer();
+       
     }
 
     public void moveZombies() {
@@ -37,6 +34,12 @@ public class Board {
         int x = zombie.getXPosition();
         int y = zombie.getYPosition();
 
+        if (zombie.isDead()) {
+            board[y][x].setZombie(null); // remove zombie from board
+            zombiesToRemove.add(zombie);
+            System.out.println("Zombie at (" + y + ", " + x + ") died and was removed.");
+            continue; // skip this zombie’s turn
+        }
         // Attack logic
         if (x >= 0 && x < 9) {
             Tile tile = board[y][x];
@@ -59,23 +62,24 @@ public class Board {
         }
 
         // Remove from old tile
-        if (x >= 0 && x < 9) {
+        if (zombie.getXPosition() >= 0 && zombie.getXPosition() < 9) {
             board[y][x].setZombie(null);
         }
 
-        zombie.move(); // Move if no plant blocks
+         // Move if no plant blocks
+        if (x == 0) {
+            // zombie.incrementTicksAtCol0();
+            // board[y][newX].setZombie(zombie);
+            // if (zombie.getTicksAtCol0() >= 4) {
+            //     zombiesToRemove.add(zombie);
+            //     System.out.println("Zombie left the screen after 4 ticks at column 0.");
+            // }
+            zombiesToRemove.add(zombie);
 
-        int newX = zombie.getXPosition();
-        if (newX == 0) {
-            zombie.incrementTicksAtCol0();
-            board[y][newX].setZombie(zombie);
-            if (zombie.getTicksAtCol0() >= 4) {
-                zombiesToRemove.add(zombie);
-                System.out.println("Zombie left the screen after 4 ticks at column 0.");
-            }
-        } else if (newX > 0 && newX < 9) {
-            board[y][newX].setZombie(zombie);
+        } else if (x > 0 && x < 9) {
+            board[y][x - 1].setZombie(zombie);
         }
+        zombie.move();
     }
 
         zombieList.removeAll(zombiesToRemove);
@@ -89,20 +93,35 @@ public class Board {
     // Spawn a zombie at a random row, at the rightmost column
     public void spawnZombie() {
         Random rand = new Random();
-        int row = rand.nextInt(5);  // Random row (0-4)
+        int row;
+        do {
+           row = rand.nextInt(5);  
+        }while(board[row][8].isOccupied());
+         // Random row (0-4)
         Zombie zombie = new Zombie();
+        zombie.setYPosition(row);
         placeZombie(row, 8, zombie);  // Spawn zombie at the last column (rightmost)
-        System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
+        //System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
+        Driver.message = "Zombie spawned at (" + row + ", 8) at time: " + secondsPassed;
+    }
+
+    public void spawnZombie(int x) {
+        Zombie zombie = new Zombie();
+        zombie.setYPosition(x);
+        placeZombie(x, 8, zombie);  // Spawn zombie at the last column (rightmost)
+        //System.out.println("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
+        Driver.message = "Zombie spawned at (" + x + ", 8) at time: " + secondsPassed;
     }
 
     // Spawn wave of zombies from 171 to 180 seconds
     public void spawnWaveOfZombies() {
         Random rand = new Random();
-        for (int i = 0; i < 10; i++) {  // Wave of 10 zombies
-            int row = rand.nextInt(5);  // Random row (0-4)
-            Zombie zombie = new Zombie();
-            placeZombie(row, 8, zombie);  // Place zombies at the last column
-            System.out.println("Wave zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
+        for (int i = 0; i < 5; i++) {  // Wave of 10 zombies
+            // int row = rand.nextInt(5);  // Random row (0-4)
+            // Zombie zombie = new Zombie();
+            // placeZombie(row, 8, zombie);
+            spawnZombie();  // Place zombies at the last column
+            //System.out.println("Wave zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
         }
     }
 
@@ -111,6 +130,10 @@ public class Board {
         if (!board[row][col].isOccupied()) {
             board[row][col].setZombie(zombie);
             zombieList.add(zombie);
+        }else{
+            // System.out.println("didnt work");
+            // System.exit(0);
+             spawnZombie();
         }
     }
 
@@ -130,8 +153,6 @@ public class Board {
     public void update() {
         tickCount++;
 
-
-
         // Every 40 ticks (1 second), generate sun
         if (tickCount % 40 == 0) {
             generateSun();
@@ -140,7 +161,7 @@ public class Board {
         // Spawn zombies based on the timer intervals
         if (tickCount % 4 == 0) {
             secondsPassed++;
-            moveZombies();
+            //moveZombies();
 
             // Drop sun every 10 seconds
             if (secondsPassed % 10 == 0) {
@@ -154,7 +175,8 @@ public class Board {
                 spawnZombie();
             } else if (secondsPassed >= 141 && secondsPassed <= 170 && secondsPassed % 3 == 0) {
                 spawnZombie();
-            } else if (secondsPassed >= 171 && secondsPassed <= 180 && zombieList.isEmpty()) {
+            } else if (secondsPassed >= 171 && secondsPassed <= 180) {
+                Driver.message = "A wave of zombies has appeared";
                 spawnWaveOfZombies();
             }
         }
@@ -169,14 +191,12 @@ public class Board {
         }
 
         // Move zombies every 4 ticks (1 second)
-        if (tickCount % 20 == 0) {
+        if (tickCount % 30 == 0) {
             moveZombies();
         }
 
         // Increment secondsPassed every 4 ticks (1 second)
-        if (tickCount % 4 == 0) {
-            secondsPassed++;
-        }
+        
 
         // Stop the game when the timer reaches 180 seconds
         // if (secondsPassed >= 180) {

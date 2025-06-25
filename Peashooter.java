@@ -31,6 +31,7 @@ public class Peashooter extends Plant{
                         Driver.message = "Zombie dead!"; 
                         break;
                     }
+                    break;
                 }
             }
         }

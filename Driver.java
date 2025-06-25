@@ -92,7 +92,7 @@ public class Driver {
         gameLoop.start();
         inputLoop.start();
 
-        board.placeZombie(0, 8, new Zombie());
+        //board.placeZombie(0, 8, new Zombie());
         if(timer == 0){
             running = false;
         }
