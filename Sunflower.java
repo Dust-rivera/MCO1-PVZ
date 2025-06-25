@@ -1,10 +1,9 @@
 public class Sunflower extends Plant{
 
     private int tick = 0;
-    private final int BASE_TICK = 96; 
 
     public Sunflower(int x, int y){
-        super(50, 6, 15, x, y);
+        super(50, 6, 15, x, y, 96);
     }
 
     @Override
@@ -13,7 +12,7 @@ public class Sunflower extends Plant{
 
         if(Plant.sunflowerCD != 0) 
             Plant.sunflowerCD--;
-        if(tick % BASE_TICK == 0){
+        if(tick % this.getBASE() == 0){
             board.generateSun();
             tick = 0;
         }

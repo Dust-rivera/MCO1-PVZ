@@ -3,8 +3,8 @@ public class Plant {
     private int yPosition;
     private int cost;
     private int health;
-    private static int plantCount = 0;
     private int dirDamage;
+    private final int BASE_TICK;
 
     public static final int SUNFLOWER_CD = 30;
     public static final int PEASHOOTER_CD = 30;
@@ -13,12 +13,13 @@ public class Plant {
     public static int peashooterCD = 0;
 
 
-    public Plant(int cost, int health, int dirDamage, int x, int y){
+    public Plant(int cost, int health, int dirDamage, int x, int y, int base){
         xPosition = x;
         yPosition = y;
         this.cost = cost;
         this.health = health;
         this.dirDamage = dirDamage;
+        BASE_TICK = base;
     }
 
     public void update(Board board){
@@ -40,11 +41,7 @@ public class Plant {
     public int getHealth() {
         return health;
     }
-
-    public static int getPlantCount() {
-        return plantCount;
-    }
-
+    
     public int getDirDamage() {
         return dirDamage;
     }
@@ -57,16 +54,15 @@ public class Plant {
         return yPosition;
     }
 
+    public int getBASE(){
+        return BASE_TICK;
+    }
+
     public void decreaseHealth(int damage){
         this.health -= damage;
     }
 
     public boolean isDead(){
         return health <= 0;
-    }
-
-    public static void main(String[] args){
-        Sunflower s = new Sunflower(1, 1);
-        System.out.println(s.getXPosition() + s.getYPosition());
     }
 }

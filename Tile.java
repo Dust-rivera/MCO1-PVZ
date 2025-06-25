@@ -3,8 +3,12 @@ public class Tile {
     private Plant plant = null;
     private Zombie zombie = null;
 
-    public boolean isOccupied(){
-        return (plant != null || zombie != null);
+    public Plant getPlant() {
+        return plant;
+    }
+
+    public Zombie getZombie() {
+        return zombie;
     }
 
     public void setPlant(Plant plant) {
@@ -15,24 +19,11 @@ public class Tile {
         this.zombie = zombie;
     }
 
-    public Plant getPlant() {
-        return plant;
-    }
-
-    public Zombie getZombie() {
-        return zombie;
+    public boolean isOccupied(){
+        return (plant != null || zombie != null);
     }
 
     public void removeZombie(){
         this.zombie = null;
-    }
-
-    public static void main(String[] args){
-
-        Tile tile = new Tile();
-        //Sunflower sunflower = new Sunflower();
-        //tile.setPlant(sunflower);
-
-        System.out.println(tile.isOccupied());
     }
 }

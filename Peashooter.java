@@ -1,12 +1,10 @@
 public class Peashooter extends Plant{
 
-    //private final int attackSpeed = 2;
-    private final int BASE_TICK = 6;
     private int damage = 1; 
     private int tick = 0;
 
     public Peashooter(int x, int y){
-        super(100, 6, 15, x, y);
+        super(100, 6, 15, x, y, 6);
     }
 
     public void update(Board board){
@@ -15,7 +13,7 @@ public class Peashooter extends Plant{
         if(Plant.peashooterCD != 0) 
             Plant.peashooterCD--;
 
-        if(tick % BASE_TICK == 0){
+        if(tick % this.getBASE() == 0){
             Tile tile = board.getTile(this.getXPosition(), this.getYPosition());
             int row = board.getTileRow(tile);
             int col = board.getTileCol(tile);
@@ -27,11 +25,11 @@ public class Peashooter extends Plant{
                 if(zombie != null){
                     zombie.takeDamage(damage);
                         //System.out.println("zombie damage");
-                        board.getDriver().setMessage("Zombie damaged!"); 
+                        board.setMessage("Zombie damaged!"); 
                     if(zombie.isDead()){
                         target.removeZombie();
                         // System.out.println("zombie dead");
-                        board.getDriver().setMessage("Zombie dead!"); 
+                        board.setMessage("Zombie dead!"); 
                         break;
                     }
                     break;
@@ -39,11 +37,4 @@ public class Peashooter extends Plant{
             }
         }
     }
-
-    // public int getAttackSpeed() {
-    //     return attackSpeed;
-    // }
-
-
-
 }

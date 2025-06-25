@@ -6,17 +6,17 @@ public class Board {
 
     private Tile[][] board;
     private int tickCount = 0;
-    private int secondsPassed = 0; // Track the number of seconds passed
+    private int secondsPassed = 0;
     private User player;
     private List<Zombie> zombieList;
     private int sunCount = 0;
     private boolean finalWaveFlag = true;
-    private Driver driver;
+    private String message = "";
+    private boolean running = true;
 
-    public Board(User player, Driver driver) {
+    public Board(User player) {
         this.player = player;
         this.zombieList = new ArrayList<>();
-        this.driver = driver;
 
         // Initialize the game board
         board = new Tile[5][9];
@@ -25,12 +25,39 @@ public class Board {
                 board[i][j] = new Tile();
             }
         }
-
     }
 
-    public void input(Driver driver, Board board, String input) {
+    public int getSunCount() {
+        return sunCount;
+    }
+
+    public List<Zombie> getZombieList() {
+        return zombieList;
+    }
+
+    public boolean getfinalWaveFlag() {
+        return finalWaveFlag;
+    }
+
+    public String getMessage(){
+        return message;
+    }
+    
+    public boolean getRunning(){
+        return running;
+    }
+
+    public void setMessage(String string){
+        message = string;
+    }
+
+    public void setRunning(boolean bool){
+        running = bool;
+    }
+
+    public void input(Board board, String input) {
         if (input.equalsIgnoreCase("exit")) {
-            driver.setRunning(false);
+            this.setRunning(false);
         } else if (input.startsWith("S") || input.startsWith("s")) {
             String[] coordinate = input.split(" ");
             int row = Integer.parseInt(coordinate[1]);
@@ -39,9 +66,9 @@ public class Board {
                 Plant.sunflowerCD = Plant.SUNFLOWER_CD;
                 board.placePlant(row, col, new Sunflower(row, col));
             } else if (player.getSunCount() >= 50 && Plant.sunflowerCD != 0) {
-                driver.setMessage("Sunflower on cooldown!");
+                this.setMessage("Sunflower on cooldown!");
             } else {
-                driver.setMessage("Not enough Sun!");
+                this.setMessage("Not enough Sun!");
 
             }
             coordinate = null;
@@ -53,15 +80,15 @@ public class Board {
                 Plant.peashooterCD = Plant.PEASHOOTER_CD;
                 board.placePlant(row, col, new Peashooter(row, col));
             } else if (player.getSunCount() >= 100 && Plant.peashooterCD != 0) {
-                driver.setMessage("Peashooter on cooldown!");
+                this.setMessage("Peashooter on cooldown!");
             } else {
-                driver.setMessage("Not enough Sun!");
+                this.setMessage("Not enough Sun!");
             }
         } else if (input.equalsIgnoreCase("c")) {
             if (board.getSunCount() == 0) {
-                driver.setMessage("No sun");
+                this.setMessage("No sun");
             } else {
-                driver.setMessage("Sun collected");
+                this.setMessage("Sun collected");
                 player.collectSun(board.getSunCount(), board);
             }
         }
@@ -78,11 +105,9 @@ public class Board {
             if (x == 0) {
                 zombiesToRemove.add(zombie);
                 System.out.println("\nZombie has entered your home! \nGAME OVER");
-                driver.setRunning(false);// GAME ENDS
+                this.setRunning(false);
                 break;
-            } // else if (x > 0 && x < 9) {
-              // board[y][x - 1].setZombie(zombie);
-              // }
+            }
 
             if (tile.getPlant() == null && board[y][x - 1].getZombie() == null) {
                 zombie.move();
@@ -91,22 +116,19 @@ public class Board {
             }
 
             if (zombie.isDead()) {
-                board[y][x].setZombie(null); // remove zombie from board
+                board[y][x].setZombie(null);
                 zombiesToRemove.add(zombie);
-                driver.setMessage("Zombie at (" + y + ", " + x + ") died and was removed.");
-                continue; // skip this zombie’s turn
+                this.setMessage("Zombie at (" + y + ", " + x + ") died and was removed.");
+                continue;
             }
-            // Attack logic
             if (x >= 0 && x < 9) {
-                // Tile tile = board[y][x];
                 Plant plant = tile.getPlant();
 
                 if (plant != null) {
                     zombie.incrementAttackTick();
-                    // if (zombie.getAttackTick() >= 0) { // attack every second
                     plant.decreaseHealth(zombie.getDamage());
                     zombie.resetAttackTick();
-                    driver.setMessage(
+                    this.setMessage(
                             "Zombie at (" + y + ", " + x + ") attacked plant: " + plant.getHealth() + " HP left");
 
                     if (plant.isDead()) {
@@ -114,115 +136,73 @@ public class Board {
                         plant = null;
                         System.out.println("Plant at (" + y + ", " + x + ") died.");
                     }
-                    // }
-                    continue; // stop zombie movement when attacking
+                    continue;
                 }
             }
-
-            // Remove from old tile
-            // if (zombie.getXPosition() >= 0 && zombie.getXPosition() < 9) {
-            // board[y][x].setZombie(null);
-            // }
-
-            // Move if no plant blocks
 
         }
 
         zombieList.removeAll(zombiesToRemove);
     }
 
-    // Generate sun every 40 ticks (1 second)
     public void generateSun() {
         sunCount++;
     }
 
-    // Spawn a zombie at a random row, at the rightmost column
     public void spawnZombie() {
         Random rand = new Random();
         int row;
         do {
             row = rand.nextInt(5);
         } while (board[row][8].isOccupied());
-        // Random row (0-4)
         Zombie zombie = new Zombie(row);
         zombie.setYPosition(row);
-        placeZombie(row, 8, zombie); // Spawn zombie at the last column (rightmost)
-        // System.out.println("Zombie spawned at (" + row + ", 8) at time: " +
-        // secondsPassed);
+        placeZombie(row, 8, zombie); 
         if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
-            driver.setMessage("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
+            this.setMessage("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
         }
 
     }
 
-    // public void spawnZombie(int x) {
-    // Zombie zombie = new Zombie();
-    // zombie.setYPosition(x);
-    // placeZombie(x, 8, zombie); // Spawn zombie at the last column (rightmost)
-    // //System.out.println("Zombie spawned at (" + row + ", 8) at time: " +
-    // secondsPassed);
-    // driver.setMessage(input); = "Zombie spawned at (" + x + ", 8) at time: " +
-    // secondsPassed;
-    // }
-
-    // Spawn wave of zombies from 171 to 180 seconds
     public void spawnWaveOfZombies() {
-        // Random rand = new Random();
-        for (int i = 0; i < 5; i++) { // Wave of 10 zombies
-            // int row = rand.nextInt(5); // Random row (0-4)
-            // Zombie zombie = new Zombie();
-            // placeZombie(row, 8, zombie);
-            spawnZombie(); // Place zombies at the last column
-            // System.out.println("Wave zombie spawned at (" + row + ", 8) at time: " +
-            // secondsPassed);
+        for (int i = 0; i < 5; i++) {
+            spawnZombie(); 
         }
     }
 
-    // Place a zombie at the specified row and column
     public void placeZombie(int row, int col, Zombie zombie) {
         if (!board[row][col].isOccupied()) {
             board[row][col].setZombie(zombie);
             zombieList.add(zombie);
         } else {
-            // System.out.println("didnt work");
-            // System.exit(0);
             spawnZombie();
         }
     }
 
-    // Place a plant on the board at the specified row and column
     public void placePlant(int row, int col, Plant plant) {
         if (!board[row][col].isOccupied()) {
             board[row][col].setPlant(plant);
             player.buyPlant(plant.getCost());
-            // System.out.println("Placed plant at (" + row + ", " + col + ")");
-            driver.setMessage("Placed plant at (" + row + ", " + col + ")");
+            this.setMessage("Placed plant at (" + row + ", " + col + ")");
         } else {
-            // System.out.println("Tile (" + row + ", " + col + ") is already occupied.");
-            driver.setMessage("Tile (" + row + ", " + col + ") is already occupied.");
+            this.setMessage("Tile (" + row + ", " + col + ") is already occupied.");
         }
     }
 
-    // Update the board based on the timer and game logic
     public void update() {
         tickCount++;
 
-        // Every 40 ticks (1 second), generate sun
         if (tickCount % 40 == 0) {
             generateSun();
         }
 
-        // Spawn zombies based on the timer intervals
         if (tickCount % 4 == 0) {
             secondsPassed++;
-            // moveZombies();
 
-            // Drop sun every 10 seconds
             if (secondsPassed % 10 == 0) {
                 generateSun();
             }
 
-            // Zombie spawning rules based on specified time periods
             if (secondsPassed >= 30 && secondsPassed <= 80 && secondsPassed % 10 == 0) {
                 spawnZombie();
             } else if (secondsPassed >= 81 && secondsPassed <= 140 && secondsPassed % 5 == 0) {
@@ -233,7 +213,7 @@ public class Board {
                     && !board[1][8].isOccupied() && !board[2][8].isOccupied() && !board[3][8].isOccupied()
                     && !board[4][8].isOccupied() && finalWaveFlag) {
                 finalWaveFlag = false;
-                driver.setMessage("A wave of zombies has appeared");
+                this.setMessage("A wave of zombies has appeared");
                 spawnWaveOfZombies();
             }
         }
@@ -247,21 +227,12 @@ public class Board {
             }
         }
 
-        // Move zombies every 4 ticks (1 second)
-        if (tickCount % 30 == 0) {
+        if (tickCount % Zombie.getSpeed() == 0) {
             moveZombies();
         }
 
-        // Increment secondsPassed every 4 ticks (1 second)
-
-        // Stop the game when the timer reaches 180 seconds
-        // if (secondsPassed >= 180) {
-        // stopGameTimer(); // Stop the game timer when the game ends
-        // System.out.println("Game Over! The timer has reached zero.");
-        // }
     }
 
-    // Display the current state of the board
     public void display() {
         for (int i = 0; i < 5; i++) {
             System.out.println("---------------------------------------------");
@@ -271,13 +242,6 @@ public class Board {
 
                 Tile tile = board[i][j];
                 String cell = "0";
-
-                // for (Zombie zombie : zombieList) {
-                // if (zombie.getYPosition() == i && zombie.getXPosition() == j) {
-                // cell = "Z";
-                // break;
-                // }
-                // }
 
                 if (tile.getZombie() != null) {
                     cell = "Z";
@@ -297,7 +261,7 @@ public class Board {
             System.out.println();
         }
         System.out.println("---------------------------------------------");
-        System.out.println("Game message: " + driver.getMessage());
+        System.out.println("Game message: " + this.getMessage());
         System.out.println("Sun dropped: " + this.getSunCount());
         System.out.println("Sun Points: " + player.getSunCount());
         System.out.print("Enter comamnd: ");
@@ -339,21 +303,5 @@ public class Board {
             }
         }
         return -1;
-    }
-
-    public int getSunCount() {
-        return sunCount;
-    }
-
-    public Driver getDriver() {
-        return driver;
-    }
-
-    public List<Zombie> getZombieList() {
-        return zombieList;
-    }
-
-    public boolean getfinalWaveFlag() {
-        return finalWaveFlag;
     }
 }
