@@ -68,19 +68,42 @@ public class Driver {
 
         inputLoop.setDaemon(true);
         inputLoop.start();
-        board.placePlant(0, 0, new Peashooter(0, 0));
-        //board.placeZombie(0, 8, new Zombie());
-        board.placePlant(1, 0, new Peashooter(0, 0));
-        board.placePlant(2, 0, new Peashooter(0, 0));
-        board.placePlant(3, 0, new Peashooter(0, 0));
-        board.placePlant(4, 0, new Peashooter(0, 0));
+
+        // board.spawnZombie(0);
+        // board.spawnZombie(1);
+        // board.spawnZombie(2);
+        // board.spawnZombie(3);
+        // board.spawnZombie(4);
+        // board.placePlant(0, 0, new Peashooter(0, 0));
+        // board.placePlant(1, 0, new Peashooter(1, 0));
+        // board.placePlant(2, 0, new Peashooter(2, 0));
+        // board.placePlant(3, 0, new Peashooter(3, 0));
+        // board.placePlant(4, 0, new Peashooter(4, 0));
+
+        // board.placePlant(0, 1, new Peashooter(0, 1));
+        // board.placePlant(1, 1, new Peashooter(1, 1));
+        // board.placePlant(2, 1, new Peashooter(2, 1));
+        // board.placePlant(3, 1, new Peashooter(3, 1));
+        // board.placePlant(4, 1, new Peashooter(4, 1));
+
+        // board.placePlant(0, 2, new Peashooter(0, 2));
+        // board.placePlant(1, 2, new Peashooter(1, 2));
+        // board.placePlant(2, 2, new Peashooter(2, 2));
+        // board.placePlant(3, 2, new Peashooter(3, 2));
+        // board.placePlant(4, 2, new Peashooter(4, 2));
 
         while (driver.getRunning()) {
+
             board.update();
-            System.out.println("Timer: " + timer + " seconds");
+            if (!driver.getRunning())
+                break;
+            System.out.println("Timer: " + (timer) + " seconds");
+
+            tickTimer++;
+
             board.display(); // print current board
             // game logic: move zombies, shoot, etc.
-            tickTimer++;
+
             try {
                 Thread.sleep(250); // 1-second tick
             } catch (InterruptedException e) {
@@ -98,8 +121,17 @@ public class Driver {
             }
             if (tickTimer % 4 == 0)
                 timer--;
-            if (timer == 0)
+
+            if (timer == -1) {
                 driver.setRunning(false);
+                System.out.println("GAME WON!!!!!");
+            }else if (timer <= 10
+                    && board.getZombieList().isEmpty()
+                    && !board.getfinalWaveFlag()) {
+                driver.setRunning(false);
+                System.out.println("GAME WON!!!!!");
+            }
+
         }
 
         // gameLoop.start();

@@ -61,6 +61,10 @@ public class Plant {
         this.health -= damage;
     }
 
+    public boolean isDead(){
+        return health <= 0;
+    }
+
     public static void main(String[] args){
         Sunflower s = new Sunflower(1, 1);
         System.out.println(s.getXPosition() + s.getYPosition());

@@ -2,14 +2,14 @@ public class Zombie {
     private int xPosition;
     private int yPosition;
     private final int speed = 1;
-    private final int damage = 100;
+    private final int damage = 1;
     private int health = 8;
     private int ticksAtCol0 = 0;
     private long lastAttackTime = 0;
     private final int attackCooldown = 2000; // 2 seconds
     private int attackTick = 0;
 
-    public Zombie() { // accept row
+    public Zombie(int yPosition) { // accept row
         this.xPosition = 8;        // rightmost column
         this.yPosition = yPosition;
     }

@@ -6,18 +6,21 @@ public class Peashooter extends Plant{
     private int tick = 0;
 
     public Peashooter(int x, int y){
-        super(100, 600, 15, x, y);
+        super(100, 6, 15, x, y);
     }
 
     public void update(Board board){
         tick++;
+
+        if(Plant.peashooterCD != 0) 
+            Plant.peashooterCD--;
 
         if(tick % BASE_TICK == 0){
             Tile tile = board.getTile(this.getXPosition(), this.getYPosition());
             int row = board.getTileRow(tile);
             int col = board.getTileCol(tile);
 
-            for(int i = col + 1; i < board.getCol(); i++){
+            for(int i = col; i < board.getCol(); i++){
                 Tile target = board.getTile(row, i);
                 Zombie zombie = target.getZombie();
 

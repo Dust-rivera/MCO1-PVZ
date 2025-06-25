@@ -4,12 +4,15 @@ public class Sunflower extends Plant{
     private final int BASE_TICK = 96; 
 
     public Sunflower(int x, int y){
-        super(4, 600, 15, x, y);
+        super(50, 6, 15, x, y);
     }
 
     @Override
     public void update(Board board){
         tick++;
+
+        if(Plant.sunflowerCD != 0) 
+            Plant.sunflowerCD--;
         if(tick % BASE_TICK == 0){
             board.generateSun();
             tick = 0;
