@@ -14,7 +14,7 @@ public class Zombie {
     private final int DAMAGE = 1;
 
     /**
-     * Creates Zombie object given its y position and puts its x position as 8
+     * Creates Zombie object given its y position
      * @param yPosition the y position of the zombie
      */
     public Zombie(int yPosition) { 
@@ -40,7 +40,7 @@ public class Zombie {
 
     /**
      * This gets the zombie's x position
-     * @return an integer containing the zombie's x positon
+     * @return an integer containing the zombie's x position
      */
     public int getXPosition() {
         return xPosition;
@@ -48,7 +48,7 @@ public class Zombie {
 
     /**
      * This gets the zombie's y position
-     * @return an integer containing the zombie's y positon
+     * @return an integer containing the zombie's y position
      */
     public int getYPosition() {
         return yPosition;
@@ -64,7 +64,7 @@ public class Zombie {
 
     /**
      * This gets the zombie's speed based on how many ticks
-     * @return an integer containing the zombie's spead based on how many ticks
+     * @return an integer containing the zombie's speed based on how many ticks
      */
     public static int getSpeed(){
         return SPEED;

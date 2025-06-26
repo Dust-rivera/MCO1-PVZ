@@ -42,7 +42,7 @@ public class Plant {
 
     /**
      * This gets the peashooter's cooldown time
-     * @return an integer contianing the peashooter's cooldown time
+     * @return an integer containing the peashooter's cooldown time
      */
     public static int getPeashooterCD() {
         return peashooterCD;
@@ -50,7 +50,7 @@ public class Plant {
 
     /**
      * This gets the sunflower's cooldown time
-     * @return an integer contianing the sunflower's cooldown time
+     * @return an integer containing the sunflower's cooldown time
      */
     public static int getSunflowerCD() {
         return sunflowerCD;
@@ -58,7 +58,7 @@ public class Plant {
 
     /**
      * This gets the cost of the plant
-     * @return an integer contianing the cost of the plant
+     * @return an integer containing the cost of the plant
      */
     public int getCost() {
         return cost;
@@ -66,7 +66,7 @@ public class Plant {
 
     /**
      * This gets the plant's health
-     * @return an integer contianing plant's health
+     * @return an integer containing plant's health
      */
     public int getHealth() {
         return health;
@@ -74,7 +74,7 @@ public class Plant {
     
     /**
      * This gets the plant's x position
-     * @return an integer contianing the plant's x position
+     * @return an integer containing the plant's x position
      */
     public int getXPosition() {
         return xPosition;
@@ -82,7 +82,7 @@ public class Plant {
 
     /**
      * This gets the plant's y position
-     * @return an integer contianing the plant's y position
+     * @return an integer containing the plant's y position
      */
     public int getYPosition() {
         return yPosition;
@@ -90,7 +90,7 @@ public class Plant {
 
     /**
      * This gets the plant's base tick
-     * @return an integer contianing the plant's base tick
+     * @return an integer containing the plant's base tick
      */
     public int getBASE(){
         return BASE_TICK;
@@ -98,7 +98,7 @@ public class Plant {
 
     /**
      * This gets the plant's current tick
-     * @return an integer contianing the plant's current tick
+     * @return an integer containing the plant's current tick
      */
     public int getTick(){
         return tick;
@@ -128,7 +128,7 @@ public class Plant {
     }
 
     /**
-     * This check if the plant's health is below or equls to 0
+     * This check if the plant's health is below or equals to 0
      * @return a boolean if the plant's health is equal or below 0
      */
     public boolean isDead(){

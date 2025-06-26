@@ -22,6 +22,8 @@ public class Driver {
             scanner.close();
         });
 
+
+
         inputLoop.setDaemon(true);
         inputLoop.start();
 

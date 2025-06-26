@@ -6,7 +6,7 @@
 public class Sunflower extends Plant{
 
     /**
-     * This creates a Sunflower object given its x and y position. The health, cost and gets initialized
+     * This creates a Sunflower object given its x and y position
      * @param x the x position of the sunflower
      * @param y the y position of the sunflower
      */
