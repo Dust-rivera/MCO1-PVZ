@@ -1,3 +1,5 @@
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -55,11 +57,11 @@ public class Board {
         running = bool;
     }
 
-    public void input(Board board, String input) {
-        if (input.equalsIgnoreCase("exit")) {
+    public void input(Board board){
+        if (player.getInput().equalsIgnoreCase("exit")) {
             this.setRunning(false);
-        } else if (input.startsWith("S") || input.startsWith("s")) {
-            String[] coordinate = input.split(" ");
+        } else if (player.getInput().startsWith("S") || player.getInput().startsWith("s")) {
+            String[] coordinate = player.getInput().split(" ");
             int row = Integer.parseInt(coordinate[1]);
             int col = Integer.parseInt(coordinate[2]);
             if (player.getSunCount() >= 50 && Plant.sunflowerCD == 0) {
@@ -72,8 +74,8 @@ public class Board {
 
             }
             coordinate = null;
-        } else if (input.startsWith("P") || input.startsWith("p")) {
-            String[] coordinate = input.split(" ");
+        } else if (player.getInput().startsWith("P") || player.getInput().startsWith("p")) {
+            String[] coordinate = player.getInput().split(" ");
             int row = Integer.parseInt(coordinate[1]);
             int col = Integer.parseInt(coordinate[2]);
             if (player.getSunCount() >= 100 && Plant.peashooterCD == 0) {
@@ -84,7 +86,7 @@ public class Board {
             } else {
                 this.setMessage("Not enough Sun!");
             }
-        } else if (input.equalsIgnoreCase("c")) {
+        } else if (player.getInput().equalsIgnoreCase("c")) {
             if (board.getSunCount() == 0) {
                 this.setMessage("No sun");
             } else {
@@ -113,15 +115,16 @@ public class Board {
                 zombie.move();
                 board[y][x].setZombie(null);
                 board[y][x - 1].setZombie(zombie);
+                
             }
 
-            if (zombie.isDead()) {
+            else if (zombie.isDead()) {
                 board[y][x].setZombie(null);
                 zombiesToRemove.add(zombie);
                 this.setMessage("Zombie at (" + y + ", " + x + ") died and was removed.");
-                continue;
+                
             }
-            if (x >= 0 && x < 9) {
+            else if (x >= 0 && x < 9) {
                 Plant plant = tile.getPlant();
 
                 if (plant != null) {
@@ -158,6 +161,21 @@ public class Board {
         Zombie zombie = new Zombie(row);
         zombie.setYPosition(row);
         placeZombie(row, 8, zombie); 
+        if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
+            this.setMessage("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
+        }
+
+    }
+
+    public void spawnZombie(int x) {
+        Random rand = new Random();
+        int row;
+        do {
+            row = rand.nextInt(5);
+        } while (board[x][8].isOccupied());
+        Zombie zombie = new Zombie(x);
+        zombie.setYPosition(x);
+        placeZombie(x, 8, zombie); 
         if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
             this.setMessage("Zombie spawned at (" + row + ", 8) at time: " + secondsPassed);
         }

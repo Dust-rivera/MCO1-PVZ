@@ -1,19 +1,32 @@
+/** Represents a Peashooter that inherits the Plant class
+ * @author Deveza, Jerry King 
+ * @author Rivera, Dustine Gian
+ * @version 1.0
+ */
 public class Peashooter extends Plant{
 
     private int damage = 1; 
-    private int tick = 0;
 
+    /**
+     * This creates a Peashooter object given its x and y position
+     * @param x the x position of the peashooter
+     * @param y the y position of the peashooter
+     */
     public Peashooter(int x, int y){
-        super(100, 6, 15, x, y, 6);
+        super(100, 6, x, y, 6);
     }
 
+    /** This updates the Peashooter given the board
+     * @param board the board to be updated
+     */
+    @Override
     public void update(Board board){
-        tick++;
+        this.increaseTick();
 
         if(Plant.peashooterCD != 0) 
             Plant.peashooterCD--;
 
-        if(tick % this.getBASE() == 0){
+        if(this.getTick() % this.getBASE() == 0){
             Tile tile = board.getTile(this.getXPosition(), this.getYPosition());
             int row = board.getTileRow(tile);
             int col = board.getTileCol(tile);
@@ -24,11 +37,9 @@ public class Peashooter extends Plant{
 
                 if(zombie != null){
                     zombie.takeDamage(damage);
-                        //System.out.println("zombie damage");
                         board.setMessage("Zombie damaged!"); 
                     if(zombie.isDead()){
                         target.removeZombie();
-                        // System.out.println("zombie dead");
                         board.setMessage("Zombie dead!"); 
                         break;
                     }

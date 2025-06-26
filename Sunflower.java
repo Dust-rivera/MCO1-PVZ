@@ -1,23 +1,38 @@
+/** Represents a Sunflower that inherits the Plant class
+ * @author Deveza, Jerry King 
+ * @author Rivera, Dustine Gian
+ * @version 1.0
+ */
 public class Sunflower extends Plant{
 
-    private int tick = 0;
-
+    /**
+     * This creates a Sunflower object given its x and y position
+     * @param x the x position of the sunflower
+     * @param y the y position of the sunflower
+     */
     public Sunflower(int x, int y){
-        super(50, 6, 15, x, y, 96);
+        super(50, 6, x, y, 96);
     }
 
+    /** This updates the Peashooter given the board
+     * @param board the board to be updated
+     */
     @Override
     public void update(Board board){
-        tick++;
+        this.increaseTick();;
 
         if(Plant.sunflowerCD != 0) 
             Plant.sunflowerCD--;
-        if(tick % this.getBASE() == 0){
+        if(this.getTick() % this.getBASE() == 0){
             board.generateSun();
-            tick = 0;
+            this.setTick(0);
         }
     }
 
+    /**
+     * This generates sun and adds to the sun count of the board
+     * @param board the board to be updated
+     */
     public void generateSun(Board board){
         board.generateSun();
     }

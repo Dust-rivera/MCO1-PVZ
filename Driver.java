@@ -15,8 +15,8 @@ public class Driver {
             Scanner scanner = new Scanner(System.in);
             while (board.getRunning()) {
                 if (scanner.hasNextLine()) {
-                    String input = scanner.nextLine();
-                    board.input(board, input);
+                    user.setInput(scanner.nextLine());
+                    board.input(board);
                 }
             }
             scanner.close();
