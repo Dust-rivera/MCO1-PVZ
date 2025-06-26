@@ -8,7 +8,7 @@ public class Peashooter extends Plant{
     private int damage = 1; 
 
     /**
-     * This creates a Peashooter object given its x and y position
+     * This creates a Peashooter object given its x and y position. The health, cost and gets initialized
      * @param x the x position of the peashooter
      * @param y the y position of the peashooter
      */

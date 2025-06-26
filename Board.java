@@ -1,5 +1,8 @@
-
-
+/** This represents the User
+ * @author Deveza, Jerry King 
+ * @author Rivera, Dustine Gian
+ * @version 1.0
+ */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

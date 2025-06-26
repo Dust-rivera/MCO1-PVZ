@@ -14,7 +14,7 @@ public class Zombie {
     private final int DAMAGE = 1;
 
     /**
-     * Creates Zombie object given its y position
+     * Creates Zombie object given its y position and puts its x position as 8
      * @param yPosition the y position of the zombie
      */
     public Zombie(int yPosition) { 

@@ -9,7 +9,7 @@ public class User {
     private String input;
 
     /** 
-     * This creates a User object
+     * This creates a User object and initializes the sunCount to 50
      */
     public User(){
         sunCount = 50;
