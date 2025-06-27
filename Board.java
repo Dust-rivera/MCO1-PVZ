@@ -5,7 +5,6 @@
  * @version 1.0
  */
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Board {
@@ -14,7 +13,7 @@ public class Board {
     private int tickCount = 0;
     private int secondsPassed = 0;
     private User player;
-    private List<Zombie> zombieList;
+    private ArrayList<Zombie> zombieList;
     private int sunCount = 0;
     private boolean finalWaveFlag = true;
     private String message = "";
@@ -52,7 +51,7 @@ public class Board {
      * This gets the board's zombie array list
      * @return an array list containing all the zombies on the board
      */
-    public List<Zombie> getZombieList() {
+    public ArrayList<Zombie> getZombieList() {
         return zombieList;
     }
 
@@ -85,7 +84,7 @@ public class Board {
      * @return and integer containing amount of rows
      */
     public int getRows() {
-        return board.length;
+        return numRows;
     }
 
     /**
@@ -93,7 +92,7 @@ public class Board {
      * @return and integer containing amount of columns
      */
     public int getCol() {
-        return board[0].length;
+        return numCols;
     }
 
     /**
@@ -170,8 +169,15 @@ public class Board {
             this.setRunning(false);
         } else if (player.getInput().startsWith("S") || player.getInput().startsWith("s")) {
             String[] coordinate = player.getInput().split(" ");
-            int row = Integer.parseInt(coordinate[1]) - 1;
-            int col = Integer.parseInt(coordinate[2]) - 1;
+            int row, col;
+            try{
+                row = Integer.parseInt(coordinate[1]) - 1;
+                col = Integer.parseInt(coordinate[2]) - 1;
+            }catch(NumberFormatException e){
+                row = -1;
+                col = -1; 
+                this.setMessage("Invalid input");
+            }
             if (player.getSunCount() >= 50 && Plant.sunflowerCD == 0) {
                 if(row >= 0 && row < numRows && col >= 0 && col < numCols){
                     Plant.sunflowerCD = Plant.SUNFLOWER_REGEN;
@@ -188,8 +194,15 @@ public class Board {
             coordinate = null;
         } else if (player.getInput().startsWith("P") || player.getInput().startsWith("p")) {
             String[] coordinate = player.getInput().split(" ");
-            int row = Integer.parseInt(coordinate[1]) - 1;
-            int col = Integer.parseInt(coordinate[2]) - 1;
+            int row, col;
+            try{
+                row = Integer.parseInt(coordinate[1]) - 1;
+                col = Integer.parseInt(coordinate[2]) - 1;
+            }catch(NumberFormatException e){
+                row = -1;
+                col = -1; 
+                this.setMessage("Invalid input");
+            }
             if (player.getSunCount() >= 100 && Plant.peashooterCD == 0) {
                 if(row >= 0 && row < numRows && col >= 0 && col < numCols){
                     Plant.peashooterCD = Plant.PEASHOOTER_REGEN;
@@ -227,13 +240,6 @@ public class Board {
             int row = zombie.getYPosition();
             Tile tile = board[row][col];
 
-            if (col == 0) {
-                zombiesToRemove.add(zombie);
-                System.out.println("\nZombie has entered your home! \nGAME OVER");
-                this.setRunning(false);
-                break;
-            }
-
             if (tile.getPlant() == null /*&& board[row][col - 1].getZombies().size() == 0*/) {
                 zombie.move();
                 board[row][col].removeZombie(zombie);
@@ -245,12 +251,17 @@ public class Board {
                 board[row][col].removeZombie(zombie);
                 zombiesToRemove.add(zombie);
                 this.setMessage("Zombie at (" + (row + 1) + ", " + (col + 1) + ") died and was removed.");
-                
             }
             else if (col >= 0 && col < numCols) {
                 Plant plant = tile.getPlant();
 
                 if (plant != null) {
+                    if (col == 0) {
+                        zombiesToRemove.add(zombie);
+                        System.out.println("\nZombie has entered your home! \nGAME OVER");
+                        this.setRunning(false);
+                        break;
+                    }
                     zombie.incrementAttackTick();
                     plant.decreaseHealth(zombie.getDamage());
                     zombie.resetAttackTick();
@@ -292,14 +303,14 @@ public class Board {
         }
     }
 
-    // public void spawnZombie(int x) {
-    //     Zombie zombie = new Zombie(x);
-    //     zombie.setYPosition(x);
-    //     placeZombie(x, 8, zombie); 
-    //     if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
-    //         this.setMessage("Zombie spawned at (" + (x + 1) + ", 8) at time: " + secondsPassed);
-    //     }
-    // }
+    public void spawnZombie(int x) {
+        Zombie zombie = new Zombie(x);
+        zombie.setYPosition(x);
+        placeZombie(x, 8, zombie); 
+        if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
+            this.setMessage("Zombie spawned at (" + (x + 1) + ", 8) at time: " + secondsPassed);
+        }
+    }
 
     /**
      * This spawns a wave of zombies on the board
@@ -307,6 +318,7 @@ public class Board {
     public void spawnWaveOfZombies() {
         for (int i = 0; i < numRows; i++) {
             spawnZombie(); 
+            //spawnZombie();
         }
     }
 

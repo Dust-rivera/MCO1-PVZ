@@ -5,16 +5,13 @@
  */
 public class Peashooter extends Plant{
 
-    private int damage = 10; 
-    private int dirDamage = 15;
-
     /**
      * This creates a Peashooter object given its x and y position
      * @param x the x position of the peashooter
      * @param y the y position of the peashooter
      */
     public Peashooter(int x, int y){
-        super(100, 60, x, y, 6, 9);
+        super(100, 60, x, y, 6, 9, 20, 30);
     }
 
     /** This updates the Peashooter given the board
@@ -38,10 +35,10 @@ public class Peashooter extends Plant{
                 Zombie zombie = target.getZombie(0);
 
                 if(zombie != null){
-                    if(i == col){
-                        zombie.takeDamage(dirDamage);
+                    if(i <= col + 2){
+                        zombie.takeDamage(this.getDirDamage());
                     }else{
-                        zombie.takeDamage(damage);
+                        zombie.takeDamage(this.getDamage());
                     }
                         board.setMessage("Zombie damaged!"); 
                     if(zombie.isDead()){

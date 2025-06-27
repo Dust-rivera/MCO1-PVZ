@@ -10,6 +10,8 @@ public class Plant {
     private int health;
     private int tick = 0;
     private int range;
+    private int damage;
+    private int dirDamage;
     private final int SPEED;
 
     public static final int SUNFLOWER_REGEN = 30;
@@ -28,13 +30,15 @@ public class Plant {
      * @param speed how many ticks per update
      * @param range how far plant reaches
      */
-    public Plant(int cost, int health, int x, int y, int speed, int range){
+    public Plant(int cost, int health, int x, int y, int speed, int range, int damage, int dirDamage){
         xPosition = x;
         yPosition = y;
         this.cost = cost;
         this.health = health;
         SPEED = speed;
         this.range = range;
+        this.damage = damage;
+        this.dirDamage = dirDamage;
     }
 
     /**
@@ -114,6 +118,23 @@ public class Plant {
     public int getRange(){
         return range;
     }
+
+    /**
+     * This gets the plant's base damage
+     * @return an integer containing the plant's base damage
+     */
+    public int getDamage(){
+        return damage;
+    }
+
+    /**
+     * This gets the plant's direct damage
+     * @return an integer containing the plant's direct damage
+     */
+    public int getDirDamage(){
+        return dirDamage;
+    }
+
     /**
      * This modifies the plant's tick
      * @param set the new value of tick

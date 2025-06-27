@@ -16,7 +16,7 @@ public class Driver {
         System.out.flush();
         System.out.println("Welcome to Plants vs Zombies!!\n");
         System.out.println("This game continuously updates 4 times per second");
-        System.out.println("There are 5 rows and 9 columns");
+        System.out.println("There are " + board.getRows() + " rows and " + board.getCol() + " columns");
         System.out.println("COMMANDS[not case-sensitive]: ");
         System.out.println("\tc - Collects Sun");
         System.out.println("\ts [row] [column] - Plants Sunflower at Specific Coordinate");
@@ -37,8 +37,30 @@ public class Driver {
             scanner.close();
         });
 
-        // board.spawnZombie(0);
-        // board.placePlant(0, 8, new Peashooter(0, 8));
+        board.placePlant(0, 0, new Peashooter(0, 0));
+        board.placePlant(1, 0, new Peashooter(0, 1));
+        board.placePlant(2, 0, new Peashooter(0, 2));
+        board.placePlant(3, 0, new Peashooter(0, 3));
+        board.placePlant(4, 0, new Peashooter(0, 4));
+
+        board.placePlant(0, 1, new Peashooter(1, 0));
+        board.placePlant(1, 1, new Peashooter(1, 1));
+        board.placePlant(2, 1, new Peashooter(1, 2));
+        board.placePlant(3, 1, new Peashooter(1, 3));
+        board.placePlant(4, 1, new Peashooter(1, 4));
+
+        board.placePlant(0, 2, new Peashooter(2, 0));
+        board.placePlant(1, 2, new Peashooter(2, 1));
+        board.placePlant(2, 2, new Peashooter(2, 2));
+        board.placePlant(3, 2, new Peashooter(2, 3));
+        board.placePlant(4, 2, new Peashooter(2, 4));
+
+        board.placePlant(0, 3, new Peashooter(3, 0));
+        board.placePlant(1, 3, new Peashooter(3, 1));
+        board.placePlant(2, 3, new Peashooter(3, 2));
+        board.placePlant(3, 3, new Peashooter(3, 3));
+        board.placePlant(4, 3, new Peashooter(3, 4));
+
 
         inputLoop.setDaemon(true);
         inputLoop.start();
@@ -55,7 +77,7 @@ public class Driver {
             board.display();
 
             try {
-                Thread.sleep(250);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 break;
             }
