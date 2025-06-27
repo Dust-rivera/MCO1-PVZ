@@ -37,37 +37,6 @@ public class Driver {
             scanner.close();
         });
 
-        board.placePlant(0, 0, new Peashooter(0, 0));
-        board.placePlant(0, 1, new Peashooter(0, 1));
-        board.placePlant(0, 2, new Peashooter(0, 2));
-        board.placePlant(0, 3, new Peashooter(0, 3));
-        board.placePlant(0, 4, new Peashooter(0, 4));
-
-        board.placePlant(1, 0, new Peashooter(1, 0));
-        board.placePlant(1, 1, new Peashooter(1, 1));
-        board.placePlant(1, 2, new Peashooter(1, 2));
-        board.placePlant(1, 3, new Peashooter(1, 3));
-        board.placePlant(1, 4, new Peashooter(1, 4));
-
-        board.placePlant(2, 0, new Peashooter(2, 0));
-        board.placePlant(2, 1, new Peashooter(2, 1));
-        board.placePlant(2, 2, new Peashooter(2, 2));
-        board.placePlant(2, 3, new Peashooter(2, 3));
-        board.placePlant(2, 4, new Peashooter(2, 4));
-
-        board.placePlant(3, 0, new Peashooter(3, 0));
-        board.placePlant(3, 1, new Peashooter(3, 1));
-        board.placePlant(3, 2, new Peashooter(3, 2));
-        board.placePlant(3, 3, new Peashooter(3, 3));
-        board.placePlant(3, 4, new Peashooter(3, 4));
-
-        board.placePlant(4, 0, new Peashooter(4, 0));
-        board.placePlant(4, 1, new Peashooter(4, 1));
-        board.placePlant(4, 2, new Peashooter(4, 2));
-        board.placePlant(4, 3, new Peashooter(4, 3));
-        board.placePlant(4, 4, new Peashooter(4, 4));
-
-
         inputLoop.setDaemon(true);
         inputLoop.start();
 
@@ -83,7 +52,7 @@ public class Driver {
             board.display();
 
             try {
-                Thread.sleep(10);
+                Thread.sleep(250);
             } catch (InterruptedException e) {
                 break;
             }

@@ -77,6 +77,7 @@ public class Tile {
 
     /**
      * Removes the zombie on the tile
+     * @param index the index of zombie to be removed
      */
     public void removeZombie(int index){
         zombies.remove(index);

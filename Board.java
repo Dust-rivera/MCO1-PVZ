@@ -1,3 +1,4 @@
+
 /**
  * Represents the main board of the game
  * @author Deveza, Jerry King 
@@ -23,7 +24,10 @@ public class Board {
 
     /**
      * This creates a board object given the player
+     * 
      * @param player the user of the board
+     * @param row    the number of rows to be created
+     * @param col    the number of columns to be created
      */
     public Board(User player, int row, int col) {
         this.player = player;
@@ -41,6 +45,7 @@ public class Board {
 
     /**
      * This gets the board's sun count
+     * 
      * @return an integer containing the board's sun count
      */
     public int getSunCount() {
@@ -49,6 +54,7 @@ public class Board {
 
     /**
      * This gets the board's zombie array list
+     * 
      * @return an array list containing all the zombies on the board
      */
     public ArrayList<Zombie> getZombieList() {
@@ -57,6 +63,7 @@ public class Board {
 
     /**
      * This gets the state of the finaWaveFlag boolean
+     * 
      * @return a boolean containing the state of the finalWaveFlag variable
      */
     public boolean getFinalWaveFlag() {
@@ -65,22 +72,25 @@ public class Board {
 
     /**
      * This gets the board's message
+     * 
      * @return a String containing the board's message
      */
-    public String getMessage(){
+    public String getMessage() {
         return message;
     }
-    
+
     /**
      * This gets the state of the running boolean
+     * 
      * @return a boolean containing the state of the running variable
      */
-    public boolean getRunning(){
+    public boolean getRunning() {
         return running;
     }
 
     /**
      * This gets the number of rows of the board
+     * 
      * @return and integer containing amount of rows
      */
     public int getRows() {
@@ -89,6 +99,7 @@ public class Board {
 
     /**
      * This gets the number of columns of the board
+     * 
      * @return and integer containing amount of columns
      */
     public int getCol() {
@@ -97,6 +108,7 @@ public class Board {
 
     /**
      * This returns the specified tile given the row and column
+     * 
      * @param row the row of the tile
      * @param col the column of the tile
      * @return a tile on the board
@@ -107,6 +119,7 @@ public class Board {
 
     /**
      * This gets the which row the tile given is on
+     * 
      * @param target the tile to be row identified
      * @return an integer containing the row of targeted tile
      */
@@ -123,6 +136,7 @@ public class Board {
 
     /**
      * This gets the which column the tile given is on
+     * 
      * @param target the tile to be column identified
      * @return an integer containing the column of targeted tile
      */
@@ -139,17 +153,19 @@ public class Board {
 
     /**
      * This modifies the board's message
+     * 
      * @param string the string to modify the board's message
      */
-    public void setMessage(String string){
+    public void setMessage(String string) {
         message = string;
     }
 
     /**
      * This modifies the state of the running variable
+     * 
      * @param bool the boolean to modify the sate of the running variable
      */
-    public void setRunning(boolean bool){
+    public void setRunning(boolean bool) {
         running = bool;
     }
 
@@ -162,27 +178,28 @@ public class Board {
 
     /**
      * This updates the board based on the player's input
+     * 
      * @param board the board to be updated
      */
-    public void input(Board board){
+    public void input(Board board) {
         if (player.getInput().equalsIgnoreCase("exit")) {
             this.setRunning(false);
         } else if (player.getInput().startsWith("S") || player.getInput().startsWith("s")) {
             String[] coordinate = player.getInput().split(" ");
             int row, col;
-            try{
+            try {
                 row = Integer.parseInt(coordinate[1]) - 1;
                 col = Integer.parseInt(coordinate[2]) - 1;
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 row = -1;
-                col = -1; 
+                col = -1;
                 this.setMessage("Invalid input");
             }
             if (player.getSunCount() >= 50 && Plant.sunflowerCD == 0) {
-                if(row >= 0 && row < numRows && col >= 0 && col < numCols){
+                if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
                     Plant.sunflowerCD = Plant.SUNFLOWER_REGEN;
                     board.placePlant(row, col, new Sunflower(row, col));
-                }else{
+                } else {
                     this.setMessage("Input Out of Bounds");
                 }
             } else if (player.getSunCount() >= 50 && Plant.sunflowerCD != 0) {
@@ -195,19 +212,19 @@ public class Board {
         } else if (player.getInput().startsWith("P") || player.getInput().startsWith("p")) {
             String[] coordinate = player.getInput().split(" ");
             int row, col;
-            try{
+            try {
                 row = Integer.parseInt(coordinate[1]) - 1;
                 col = Integer.parseInt(coordinate[2]) - 1;
-            }catch(NumberFormatException e){
+            } catch (NumberFormatException e) {
                 row = -1;
-                col = -1; 
+                col = -1;
                 this.setMessage("Invalid input");
             }
             if (player.getSunCount() >= 100 && Plant.peashooterCD == 0) {
-                if(row >= 0 && row < numRows && col >= 0 && col < numCols){
+                if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
                     Plant.peashooterCD = Plant.PEASHOOTER_REGEN;
                     board.placePlant(row, col, new Peashooter(row, col));
-                }else{
+                } else {
                     this.setMessage("Input Out of Bounds");
                 }
             } else if (player.getSunCount() >= 100 && Plant.peashooterCD != 0) {
@@ -222,8 +239,8 @@ public class Board {
                 this.setMessage("Sun collected");
                 player.collectSun(board.getSunCount(), board);
             }
-        } else{
-                this.setMessage("Invalid command");
+        } else {
+            this.setMessage("Invalid command");
 
         }
     }
@@ -232,113 +249,62 @@ public class Board {
      * This updates all the zombies on the board
      * in a certain amount of ticks
      */
-    // public void moveZombies() {
-    //     ArrayList<Zombie> zombiesToRemove = new ArrayList<>();
+    public void moveZombies() {
+        ArrayList<Zombie> zombiesToRemove = new ArrayList<>();
 
-    //     for (Zombie zombie : zombieList) {
-    //         int col = zombie.getXPosition();
-    //         int row = zombie.getYPosition();
-    //         Tile tile = board[row][col];
+        for (Zombie zombie : zombieList) {
+            int col = zombie.getXPosition();
+            int row = zombie.getYPosition();
+            Tile tile = board[row][col];
 
-    //         if (tile.getPlant() == null) {
-    //             zombie.move();
-    //             board[row][col].removeZombie(zombie);
-    //             board[row][col - 1].addZombie(zombie);
-                
-    //         }
-    //         else if (zombie.isDead()) {
-    //             board[row][col].removeZombie(zombie);
-    //             zombiesToRemove.add(zombie);
-    //             this.setMessage("Zombie at (" + (row + 1) + ", " + (col + 1) + ") died and was removed.");
-    //         }
-    //         else if (col >= 0 && col < numCols) {
-    //             Plant plant = tile.getPlant();
-
-    //             if (plant != null) {
-    //                 if (col == 0) {
-    //                     zombiesToRemove.add(zombie);
-    //                     System.out.println("\nZombie has entered your home! \nGAME OVER");
-    //                     this.setRunning(false);
-    //                     break;
-    //                 }
-    //                 zombie.incrementAttackTick();
-    //                 plant.decreaseHealth(zombie.getDamage());
-    //                 zombie.resetAttackTick();
-    //                 this.setMessage(
-    //                         "Zombie at (" + (row + 1) + ", " + (col + 1) + ") attacked plant: " + plant.getHealth() + " HP left");
-
-    //                 if (plant.isDead()) {
-    //                     tile.setPlant(null);
-    //                     plant = null;
-    //                     System.out.println("Plant at (" + (row + 1) + ", " + (col + 1) + ") died.");
-    //                 }
-    //                 continue;
-    //             }
-    //         }
-
-    //     }
-
-    //     zombieList.removeAll(zombiesToRemove);
-    // }
-    /**
- * This updates all the zombies on the board
- * in a certain amount of ticks
- */
-public void moveZombies() {
-    ArrayList<Zombie> zombiesToRemove = new ArrayList<>();
-
-    for (Zombie zombie : zombieList) {
-        int col = zombie.getXPosition();
-        int row = zombie.getYPosition();
-        Tile tile = board[row][col];
-
-        // FIRST: Check if zombie is already dead (from previous damage)
-        if (zombie.isDead()) {
-            board[row][col].removeZombie(zombie);
-            zombiesToRemove.add(zombie);
-            this.setMessage("Zombie at (" + (row + 1) + ", " + (col + 1) + ") died and was removed.");
-            continue; // Skip to next zombie
-        }
-
-        // SECOND: Check if zombie reached the house (game over condition)
-        if (col == 0) {
-            zombiesToRemove.add(zombie);
-            System.out.println("\nZombie has entered your home! \nGAME OVER");
-            this.setRunning(false);
-            break;
-        }
-
-        // THIRD: Handle combat or movement
-        Plant plant = tile.getPlant();
-        
-        if (plant != null) {
-            // Combat: zombie attacks plant
-            zombie.incrementAttackTick();
-            plant.decreaseHealth(zombie.getDamage());
-            zombie.resetAttackTick();
-            this.setMessage(
-                    "Zombie at (" + (row + 1) + ", " + (col + 1) + ") attacked plant: " + plant.getHealth() + " HP left");
-
-            // Check if plant died from attack
-            if (plant.isDead()) {
-                tile.setPlant(null);
-                System.out.println("Plant at (" + (row + 1) + ", " + (col + 1) + ") died.");
-            }
-        } else {
-            // No plant: zombie can move
-            // Check if path is clear (no zombies in front)
-            if (col > 0 && board[row][col - 1].getZombies().size() == 0) {
-                zombie.move(); // This decreases xPosition by 1
+            // FIRST: Check if zombie is already dead (from previous damage)
+            if (zombie.isDead()) {
                 board[row][col].removeZombie(zombie);
-                board[row][col - 1].addZombie(zombie);
+                zombiesToRemove.add(zombie);
+                this.setMessage("Zombie at (" + (row + 1) + ", " + (col + 1) + ") died and was removed.");
+                continue; // Skip to next zombie
             }
-            // If path is blocked, zombie stays in place
-        }
-    }
 
-    // Remove all dead zombies from the main list
-    zombieList.removeAll(zombiesToRemove);
-}
+            // SECOND: Check if zombie reached the house (game over condition)
+            if (col == 0) {
+                zombiesToRemove.add(zombie);
+                System.out.println("\nZombie has entered your home! \nGAME OVER");
+                this.setRunning(false);
+                break;
+            }
+
+            // THIRD: Handle combat or movement
+            Plant plant = tile.getPlant();
+
+            if (plant != null) {
+                // Combat: zombie attacks plant
+                zombie.incrementAttackTick();
+                plant.decreaseHealth(zombie.getDamage());
+                zombie.resetAttackTick();
+                this.setMessage(
+                        "Zombie at (" + (row + 1) + ", " + (col + 1) + ") attacked plant: " + plant.getHealth()
+                                + " HP left");
+
+                // Check if plant died from attack
+                if (plant.isDead()) {
+                    tile.setPlant(null);
+                    System.out.println("Plant at (" + (row + 1) + ", " + (col + 1) + ") died.");
+                }
+            } else {
+                // No plant: zombie can move
+                // Check if path is clear (no zombies in front)
+                if (col > 0 && board[row][col - 1].getZombies().size() == 0) {
+                    zombie.move(); // This decreases xPosition by 1
+                    board[row][col].removeZombie(zombie);
+                    board[row][col - 1].addZombie(zombie);
+                }
+                // If path is blocked, zombie stays in place
+            }
+        }
+
+        // Remove all dead zombies from the main list
+        zombieList.removeAll(zombiesToRemove);
+    }
 
     /**
      * This increases the sun count by one
@@ -355,18 +321,9 @@ public void moveZombies() {
         int row = rand.nextInt(numRows);
         Zombie zombie = new Zombie(row);
         zombie.setYPosition(row);
-        placeZombie(row, numCols - 1, zombie); 
+        placeZombie(row, numCols - 1, zombie);
         if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
             this.setMessage("Zombie spawned at (" + (row + 1) + ", 8) at time: " + secondsPassed);
-        }
-    }
-
-    public void spawnZombie(int x) {
-        Zombie zombie = new Zombie(x);
-        zombie.setYPosition(x);
-        placeZombie(x, 8, zombie); 
-        if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
-            this.setMessage("Zombie spawned at (" + (x + 1) + ", 8) at time: " + secondsPassed);
         }
     }
 
@@ -375,15 +332,15 @@ public void moveZombies() {
      */
     public void spawnWaveOfZombies() {
         for (int i = 0; i < numRows; i++) {
-            spawnZombie(); 
-            //spawnZombie();
+            spawnZombie();
         }
     }
 
     /**
      * This places the zombie on the board given the zombie object, row, and column
-     * @param row the row in which the zombie will be placed
-     * @param col the column in which the zombie will be placed
+     * 
+     * @param row    the row in which the zombie will be placed
+     * @param col    the column in which the zombie will be placed
      * @param zombie the zombie object to be placed on the board
      */
     public void placeZombie(int row, int col, Zombie zombie) {
@@ -393,8 +350,9 @@ public void moveZombies() {
 
     /**
      * This places the plant on the board given the plant object, row, and column
-     * @param row the row in which the plant will be placed
-     * @param col the column in which the plant will be placed
+     * 
+     * @param row   the row in which the plant will be placed
+     * @param col   the column in which the plant will be placed
      * @param plant the plant object to be placed on the board
      */
     public void placePlant(int row, int col, Plant plant) {
@@ -426,9 +384,13 @@ public void moveZombies() {
                 spawnZombie();
             } else if (secondsPassed >= 141 && secondsPassed <= 170 && secondsPassed % 3 == 0) {
                 spawnZombie();
-            } else if (secondsPassed >= 171 && secondsPassed < 180 && /*!board[0][8].isOccupied()
-                    && !board[1][8].isOccupied() && !board[2][8].isOccupied() && !board[3][8].isOccupied()
-                    && !board[4][8].isOccupied() &&*/ finalWaveFlag) {
+            } else if (secondsPassed >= 171 && secondsPassed < 180 && /*
+                                                                       * !board[0][8].isOccupied()
+                                                                       * && !board[1][8].isOccupied() &&
+                                                                       * !board[2][8].isOccupied() &&
+                                                                       * !board[3][8].isOccupied()
+                                                                       * && !board[4][8].isOccupied() &&
+                                                                       */ finalWaveFlag) {
                 finalWaveFlag = false;
                 this.setMessage("A wave of zombies has appeared");
                 spawnWaveOfZombies();
@@ -487,5 +449,5 @@ public void moveZombies() {
         System.out.println("Sun dropped: " + this.getSunCount());
         System.out.println("Sun Points: " + player.getSunCount());
         System.out.print("Enter command: ");
-    }    
+    }
 }

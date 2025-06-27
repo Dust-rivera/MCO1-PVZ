@@ -29,6 +29,8 @@ public class Plant {
      * @param y y position of plant
      * @param speed how many ticks per update
      * @param range how far plant reaches
+     * @param damage the amount of damage plant deals
+     * @param dirDamage the amount of damage the plant deals close range
      */
     public Plant(int cost, int health, int x, int y, int speed, int range, int damage, int dirDamage){
         xPosition = x;

@@ -7,7 +7,7 @@ public class Zombie {
 
     private int xPosition;
     private int yPosition;
-    private int health = 1;
+    private int health = 70;
     private int attackTick = 0;
 
     private static final int SPEED = 16;
