@@ -42,7 +42,6 @@ public class Peashooter extends Plant{
                     }
                         board.setMessage("Zombie damaged!"); 
                     if(zombie.isDead()){
-                        target.removeZombie(0);
                         board.setMessage("Zombie dead!"); 
                         break;
                     }

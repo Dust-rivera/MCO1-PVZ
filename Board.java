@@ -232,55 +232,113 @@ public class Board {
      * This updates all the zombies on the board
      * in a certain amount of ticks
      */
-    public void moveZombies() {
-        ArrayList<Zombie> zombiesToRemove = new ArrayList<>();
+    // public void moveZombies() {
+    //     ArrayList<Zombie> zombiesToRemove = new ArrayList<>();
 
-        for (Zombie zombie : zombieList) {
-            int col = zombie.getXPosition();
-            int row = zombie.getYPosition();
-            Tile tile = board[row][col];
+    //     for (Zombie zombie : zombieList) {
+    //         int col = zombie.getXPosition();
+    //         int row = zombie.getYPosition();
+    //         Tile tile = board[row][col];
 
-            if (tile.getPlant() == null /*&& board[row][col - 1].getZombies().size() == 0*/) {
-                zombie.move();
-                board[row][col].removeZombie(zombie);
-                board[row][col - 1].addZombie(zombie);
+    //         if (tile.getPlant() == null) {
+    //             zombie.move();
+    //             board[row][col].removeZombie(zombie);
+    //             board[row][col - 1].addZombie(zombie);
                 
-            }
+    //         }
+    //         else if (zombie.isDead()) {
+    //             board[row][col].removeZombie(zombie);
+    //             zombiesToRemove.add(zombie);
+    //             this.setMessage("Zombie at (" + (row + 1) + ", " + (col + 1) + ") died and was removed.");
+    //         }
+    //         else if (col >= 0 && col < numCols) {
+    //             Plant plant = tile.getPlant();
 
-            else if (zombie.isDead()) {
-                board[row][col].removeZombie(zombie);
-                zombiesToRemove.add(zombie);
-                this.setMessage("Zombie at (" + (row + 1) + ", " + (col + 1) + ") died and was removed.");
-            }
-            else if (col >= 0 && col < numCols) {
-                Plant plant = tile.getPlant();
+    //             if (plant != null) {
+    //                 if (col == 0) {
+    //                     zombiesToRemove.add(zombie);
+    //                     System.out.println("\nZombie has entered your home! \nGAME OVER");
+    //                     this.setRunning(false);
+    //                     break;
+    //                 }
+    //                 zombie.incrementAttackTick();
+    //                 plant.decreaseHealth(zombie.getDamage());
+    //                 zombie.resetAttackTick();
+    //                 this.setMessage(
+    //                         "Zombie at (" + (row + 1) + ", " + (col + 1) + ") attacked plant: " + plant.getHealth() + " HP left");
 
-                if (plant != null) {
-                    if (col == 0) {
-                        zombiesToRemove.add(zombie);
-                        System.out.println("\nZombie has entered your home! \nGAME OVER");
-                        this.setRunning(false);
-                        break;
-                    }
-                    zombie.incrementAttackTick();
-                    plant.decreaseHealth(zombie.getDamage());
-                    zombie.resetAttackTick();
-                    this.setMessage(
-                            "Zombie at (" + (row + 1) + ", " + (col + 1) + ") attacked plant: " + plant.getHealth() + " HP left");
+    //                 if (plant.isDead()) {
+    //                     tile.setPlant(null);
+    //                     plant = null;
+    //                     System.out.println("Plant at (" + (row + 1) + ", " + (col + 1) + ") died.");
+    //                 }
+    //                 continue;
+    //             }
+    //         }
 
-                    if (plant.isDead()) {
-                        tile.setPlant(null);
-                        plant = null;
-                        System.out.println("Plant at (" + (row + 1) + ", " + (col + 1) + ") died.");
-                    }
-                    continue;
-                }
-            }
+    //     }
 
+    //     zombieList.removeAll(zombiesToRemove);
+    // }
+    /**
+ * This updates all the zombies on the board
+ * in a certain amount of ticks
+ */
+public void moveZombies() {
+    ArrayList<Zombie> zombiesToRemove = new ArrayList<>();
+
+    for (Zombie zombie : zombieList) {
+        int col = zombie.getXPosition();
+        int row = zombie.getYPosition();
+        Tile tile = board[row][col];
+
+        // FIRST: Check if zombie is already dead (from previous damage)
+        if (zombie.isDead()) {
+            board[row][col].removeZombie(zombie);
+            zombiesToRemove.add(zombie);
+            this.setMessage("Zombie at (" + (row + 1) + ", " + (col + 1) + ") died and was removed.");
+            continue; // Skip to next zombie
         }
 
-        zombieList.removeAll(zombiesToRemove);
+        // SECOND: Check if zombie reached the house (game over condition)
+        if (col == 0) {
+            zombiesToRemove.add(zombie);
+            System.out.println("\nZombie has entered your home! \nGAME OVER");
+            this.setRunning(false);
+            break;
+        }
+
+        // THIRD: Handle combat or movement
+        Plant plant = tile.getPlant();
+        
+        if (plant != null) {
+            // Combat: zombie attacks plant
+            zombie.incrementAttackTick();
+            plant.decreaseHealth(zombie.getDamage());
+            zombie.resetAttackTick();
+            this.setMessage(
+                    "Zombie at (" + (row + 1) + ", " + (col + 1) + ") attacked plant: " + plant.getHealth() + " HP left");
+
+            // Check if plant died from attack
+            if (plant.isDead()) {
+                tile.setPlant(null);
+                System.out.println("Plant at (" + (row + 1) + ", " + (col + 1) + ") died.");
+            }
+        } else {
+            // No plant: zombie can move
+            // Check if path is clear (no zombies in front)
+            if (col > 0 && board[row][col - 1].getZombies().size() == 0) {
+                zombie.move(); // This decreases xPosition by 1
+                board[row][col].removeZombie(zombie);
+                board[row][col - 1].addZombie(zombie);
+            }
+            // If path is blocked, zombie stays in place
+        }
     }
+
+    // Remove all dead zombies from the main list
+    zombieList.removeAll(zombiesToRemove);
+}
 
     /**
      * This increases the sun count by one
