@@ -5,8 +5,8 @@
  */
 public class Peashooter extends Plant{
 
-    private int damage = 1; 
-    private int dirDamage = 2;
+    private int damage = 10; 
+    private int dirDamage = 15;
 
     /**
      * This creates a Peashooter object given its x and y position
@@ -14,7 +14,7 @@ public class Peashooter extends Plant{
      * @param y the y position of the peashooter
      */
     public Peashooter(int x, int y){
-        super(100, 6, x, y, 6, 9);
+        super(100, 60, x, y, 6, 9);
     }
 
     /** This updates the Peashooter given the board

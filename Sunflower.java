@@ -11,7 +11,7 @@ public class Sunflower extends Plant{
      * @param y the y position of the sunflower
      */
     public Sunflower(int x, int y){
-        super(50, 6, x, y, 96, 0);
+        super(50, 60, x, y, 96, 0);
     }
 
     /** This updates the Peashooter given the board

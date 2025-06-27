@@ -40,22 +40,6 @@ public class Board {
         }
     }
 
-    // /**
-    //  * This gets the number of rows of the board
-    //  * @return an integer containing number or rows
-    //  */
-    // public int getRows(){
-    //     return row;
-    // }
-
-    // /**
-    //  * This gets the number of columns of the board
-    //  * @return an integer containing number or columns
-    //  */
-    // public int getCols(){
-    //     return col;
-    // }
-
     /**
      * This gets the board's sun count
      * @return an integer containing the board's sun count
@@ -294,21 +278,6 @@ public class Board {
         sunCount++;
     }
 
-    
-    // public void spawnZombie() {
-    //     Random rand = new Random();
-    //     int row;
-    //     do {
-    //         row = rand.nextInt(5);
-    //     } while (board[row][8].isOccupied());
-    //     Zombie zombie = new Zombie(row);
-    //     zombie.setYPosition(row);
-    //     placeZombie(row, 8, zombie); 
-    //     if (!(secondsPassed >= 171 && secondsPassed <= 180)) {
-    //         this.setMessage("Zombie spawned at (" + (row + 1) + ", 8) at time: " + secondsPassed);
-    //     }
-    // }
-
     /**
      * This spawn a zombie on the board at the last column and on a random row
      */
@@ -448,7 +417,5 @@ public class Board {
         System.out.println("Sun dropped: " + this.getSunCount());
         System.out.println("Sun Points: " + player.getSunCount());
         System.out.print("Enter command: ");
-    }
-
-    
+    }    
 }

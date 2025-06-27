@@ -9,7 +9,6 @@ public class Tile {
 
     private Plant plant = null;
     private ArrayList<Zombie> zombies;
-    //private Zombie zombie = null;
 
     /**
      * Creates a tile object
