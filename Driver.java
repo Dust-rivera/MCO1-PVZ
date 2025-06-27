@@ -9,10 +9,25 @@ public class Driver {
         int stringTick = 0;
 
         User user = new User();
-        Board board = new Board(user);
+        Board board = new Board(user, 5, 9);
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        System.out.println("Welcome to Plants vs Zombies!!\n");
+        System.out.println("This game continuously updates 4 times per second");
+        System.out.println("There are 5 rows and 9 columns");
+        System.out.println("COMMANDS[not case-sensitive]: ");
+        System.out.println("\tc - Collects Sun");
+        System.out.println("\ts [row] [column] - Plants Sunflower at Specific Coordinate");
+        System.out.println("\tp [row] [column] - Plants Peashooter at Specific Coordinate\n");
+        System.out.println("GOOD LUCK AND HAVE FUN\n");
+        System.out.println("Press any key to continue...");
+        scanner.nextLine();
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+        
         Thread inputLoop = new Thread(() -> {
-            Scanner scanner = new Scanner(System.in);
             while (board.getRunning()) {
                 if (scanner.hasNextLine()) {
                     user.setInput(scanner.nextLine());
@@ -22,7 +37,8 @@ public class Driver {
             scanner.close();
         });
 
-
+        // board.spawnZombie(0);
+        // board.placePlant(0, 8, new Peashooter(0, 8));
 
         inputLoop.setDaemon(true);
         inputLoop.start();
@@ -61,7 +77,7 @@ public class Driver {
                 System.out.println("GAME WON!!!!!");
             }else if (timer <= 10
                     && board.getZombieList().isEmpty()
-                    && !board.getfinalWaveFlag()) {
+                    && !board.getFinalWaveFlag()) {
                 board.setRunning(false);
                 System.out.println("GAME WON!!!!!");
             }

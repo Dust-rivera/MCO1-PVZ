@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /** Represents a tile on the board
  * @author Deveza, Jerry King 
  * @author Rivera, Dustine Gian
@@ -6,12 +8,15 @@
 public class Tile {
 
     private Plant plant = null;
-    private Zombie zombie = null;
+    private ArrayList<Zombie> zombies;
+    //private Zombie zombie = null;
 
     /**
      * Creates a tile object
      */
-    public Tile(){}
+    public Tile(){
+        zombies = new ArrayList<>();
+    }
 
     /**
      * This gets the plant occupying the tile
@@ -22,11 +27,22 @@ public class Tile {
     }
 
     /**
-     * This gets the zombie occupying the tile
-     * @return The zombie occupying the tile
+     * This gets the zombies occupying the tile
+     * @return an ArrayList containing the zombies occupying the tile
      */
-    public Zombie getZombie() {
-        return zombie;
+    public ArrayList<Zombie> getZombies() {
+        return zombies;
+    }
+
+    /**
+     * This gets a specific zombie given the index
+     * @param index the index of zombie to be accessed
+     * @return a Zombie containing specified zombie
+     */
+    public Zombie getZombie(int index){
+        if(!zombies.isEmpty())
+            return zombies.get(index);
+        return null;
     }
 
     /**
@@ -41,16 +57,16 @@ public class Tile {
      * This modifies the zombie occupying the tile
      * @param zombie The zombie to be assigned
      */
-    public void setZombie(Zombie zombie) {
-        this.zombie = zombie;
+    public void addZombie(Zombie zombie) {
+        zombies.add(zombie);
     }
 
     /**
-     * This checks if tile is occupied by both plant and zombie
-     * @return boolean if occupied
+     * This check if tile is occupied by a Plant Object
+     * @return a booelan to check if tile is plant occupied
      */
-    public boolean isOccupied(){
-        return (plant != null || zombie != null);
+    public boolean isPlantOccupied(){
+        return plant != null;
     }
 
     /**
@@ -63,7 +79,16 @@ public class Tile {
     /**
      * Removes the zombie on the tile
      */
-    public void removeZombie(){
-        this.zombie = null;
+    public void removeZombie(int index){
+        zombies.remove(index);
+    }
+
+    /**
+     * This removes a zombie from the zombies ArrayList 
+     * given a Zombie Object
+     * @param zombie the Zombie object to be removed from the ArrayList
+     */
+    public void removeZombie(Zombie zombie){
+        zombies.remove(zombie);
     }
 }

@@ -9,29 +9,32 @@ public class Plant {
     private int cost;
     private int health;
     private int tick = 0;
-    private final int BASE_TICK;
+    private int range;
+    private final int SPEED;
 
-    public static final int SUNFLOWER_CD = 30;
-    public static final int PEASHOOTER_CD = 30;
+    public static final int SUNFLOWER_REGEN = 30;
+    public static final int PEASHOOTER_REGEN = 30;
 
     public static int sunflowerCD = 0;
     public static int peashooterCD = 0;
 
 
     /**
-     * Creates Zombie object given its y position
+     * Creates Plant object given its cost, health, x position, y position, speed, and range
      * @param cost how much sun the plant costs
      * @param health how much health the plant has
      * @param x x position of plant
      * @param y y position of plant
-     * @param base how many ticks per update
+     * @param speed how many ticks per update
+     * @param range how far plant reaches
      */
-    public Plant(int cost, int health, int x, int y, int base){
+    public Plant(int cost, int health, int x, int y, int speed, int range){
         xPosition = x;
         yPosition = y;
         this.cost = cost;
         this.health = health;
-        BASE_TICK = base;
+        SPEED = speed;
+        this.range = range;
     }
 
     /**
@@ -89,11 +92,11 @@ public class Plant {
     }
 
     /**
-     * This gets the plant's base tick
-     * @return an integer containing the plant's base tick
+     * This gets the plant's base speed
+     * @return an integer containing the plant's base speed
      */
-    public int getBASE(){
-        return BASE_TICK;
+    public int getSPEED(){
+        return SPEED;
     }
 
     /**
@@ -104,6 +107,13 @@ public class Plant {
         return tick;
     }
 
+    /**
+     * This gets the Plant's range
+     * @return and integer containing the Plant's range
+     */
+    public int getRange(){
+        return range;
+    }
     /**
      * This modifies the plant's tick
      * @param set the new value of tick

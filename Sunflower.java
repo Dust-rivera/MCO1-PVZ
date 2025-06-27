@@ -11,7 +11,7 @@ public class Sunflower extends Plant{
      * @param y the y position of the sunflower
      */
     public Sunflower(int x, int y){
-        super(50, 6, x, y, 96);
+        super(50, 6, x, y, 96, 0);
     }
 
     /** This updates the Peashooter given the board
@@ -23,7 +23,7 @@ public class Sunflower extends Plant{
 
         if(Plant.sunflowerCD != 0) 
             Plant.sunflowerCD--;
-        if(this.getTick() % this.getBASE() == 0){
+        if(this.getTick() % this.getSPEED() == 0){
             board.generateSun();
             this.setTick(0);
         }
